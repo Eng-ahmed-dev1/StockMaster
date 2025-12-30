@@ -11,10 +11,10 @@ namespace TransactionsTask.Controllers
     {
         private readonly IProductService _db;
         private readonly IMapper _mapper;
-        public ProductController(IProductService db , IMapper mapper) { _db = db; _mapper = mapper; }
+        public ProductController(IProductService db, IMapper mapper) { _db = db; _mapper = mapper; }
 
         [HttpGet]
-        public async Task<IActionResult>Show()
+        public async Task<IActionResult> Show()
         {
             var Products = await _db.GetAllProducts();
             return View(Products);
@@ -35,7 +35,7 @@ namespace TransactionsTask.Controllers
             return RedirectToAction(nameof(Show));
         }
         [HttpGet]
-        public async Task<IActionResult>Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var Pro = await _db.GetProductById(id);
             if (Pro == null)
@@ -44,7 +44,7 @@ namespace TransactionsTask.Controllers
             return View(productViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult>Edit(int id, ProductEditViewModel productEdit)
+        public async Task<IActionResult> Edit(int id, ProductEditViewModel productEdit)
         {
             if (!ModelState.IsValid)
             {

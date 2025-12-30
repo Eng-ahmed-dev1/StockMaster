@@ -28,7 +28,7 @@ namespace Transaction.BLL
             if (await IsEmailExistsAsync(model.Email))
             {
                 return IdentityResult.Failed(
-                    new IdentityError { Description = "Email already Exist " }
+                    new IdentityError { Description = "Email already Exist" }
                 );
             }
             if (await IsUserNameExistsAsync(model.UserName))
@@ -61,7 +61,7 @@ namespace Transaction.BLL
             if (user is null)
                 return SignInResult.Failed;
 
-            if (user.IsActive == false || user.IsDeleted == false)
+            if (user.IsActive == true || user.IsDeleted == true)
                 return SignInResult.Failed;
 
             var result = await _signInManager.PasswordSignInAsync(

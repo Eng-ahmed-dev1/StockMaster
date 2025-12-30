@@ -33,7 +33,6 @@ namespace TransactionsTask.Data
             );
             modelBuilder.Entity<Transactions>(
                 o => o.Property(x => x.TransactionType).HasConversion<string>()
-
             );
         }
     }
