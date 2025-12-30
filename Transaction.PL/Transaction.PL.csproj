@@ -69,8 +69,4 @@
     <ProjectReference Include="..\Transaction.BLL\Transaction.BLL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Account\" />
-  </ItemGroup>
-
 </Project>

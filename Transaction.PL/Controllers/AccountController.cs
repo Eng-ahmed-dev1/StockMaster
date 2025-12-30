@@ -9,15 +9,19 @@ namespace Transaction.PL.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountServices _accServices;
+
         public AccountController(IAccountServices accountServices)
         {
             _accServices = accountServices;
         }
+
         [HttpGet]
+        [AllowAnonymous]  
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -27,25 +31,29 @@ namespace Transaction.PL.Controllers
             {
                 return View(registerView);
             }
+
             var result = await _accServices.RegisterAsync(registerView);
+
             if (result.Succeeded)
             {
                 TempData["Success"] = "Account created successfully!";
                 return RedirectToAction(nameof(Login));
-
             }
+
             foreach (var error in result.Errors)
-                ModelState.AddModelError(string.Empty,$"Error:{error.Description}");
+                ModelState.AddModelError(string.Empty, $"Error: {error.Description}");
 
             return View(registerView);
         }
 
         [HttpGet]
+        [AllowAnonymous] 
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -55,13 +63,17 @@ namespace Transaction.PL.Controllers
             {
                 return View(loginView);
             }
+
             var result = await _accServices.LoginAsync(loginView);
+
             if (result.Succeeded)
             {
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
-                return RedirectToAction("Show", "Product");
+
+                return RedirectToAction("ShowAllTransactions", "Transaction");  
             }
+
             if (result.IsLockedOut)
                 ModelState.AddModelError(string.Empty, "Account locked.");
             else
@@ -69,6 +81,7 @@ namespace Transaction.PL.Controllers
 
             return View(loginView);
         }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Profile()
@@ -81,7 +94,15 @@ namespace Transaction.PL.Controllers
 
             return View(user);
         }
+
         [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -100,15 +121,21 @@ namespace Transaction.PL.Controllers
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
+
             return View(model);
+        }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public  async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout()
         {
             await _accServices.LogoutAsync();
-            return View(nameof(Login));
+            return RedirectToAction(nameof(Login));
         }
     }
-}   
+}

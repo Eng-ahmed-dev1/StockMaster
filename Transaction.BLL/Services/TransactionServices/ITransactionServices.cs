@@ -12,5 +12,7 @@ namespace Transaction.BLL
         Task<bool> DeleteTransaction(int id);
         Task<bool> UpdateTransaction(TransactionEditViewModel transactionEdit);
         Task<int> AddTransaction(TransactionCreateViewModel transactionCreate);
+        Task<IEnumerable<TransactionReadProSupViewModels>> GetTransactionsByUserId(string userId);
+
     }
 }

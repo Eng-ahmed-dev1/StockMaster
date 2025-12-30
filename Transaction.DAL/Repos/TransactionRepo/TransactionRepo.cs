@@ -32,6 +32,17 @@ namespace TransactionsTask.Repos.TransactionRepo
             return await db.Transactions.AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<Transactions>> GetTransactionsByUserId(string userId)
+        {
+            return await db.Transactions
+           .Include(t => t.Product)
+           .Include(t => t.Supplier)
+           .Include(t => t.CreatedBy)
+           .Where(t => t.CreatedByUserId == userId) 
+           .OrderByDescending(t => t.TransactionDate) 
+           .ToListAsync();
+        }
+
         public async Task<IEnumerable<Transactions>> GetTransactionWithDetails()
         {
             return await db.Transactions

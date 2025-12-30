@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="Transaction.BLL/Transaction.BLL.csproj" />
+  <Project Path="Transaction.BLL/Transaction.BLL.csproj" Id="5979d92a-861f-47b6-b240-a455270dc5da" />
   <Project Path="Transaction.DAL/Transaction.DAL.csproj" />
   <Project Path="Transaction.PL/Transaction.PL.csproj" />
 </Solution>

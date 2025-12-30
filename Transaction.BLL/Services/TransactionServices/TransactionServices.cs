@@ -47,6 +47,16 @@ namespace Transaction.BLL
             return _mapper.Map<IEnumerable<TransactionReadProSupViewModels>>(transations);
         }
 
+        public async Task<IEnumerable<TransactionReadProSupViewModels>> GetTransactionsByUserId(string userId)
+        {
+            var transactions = await _db.GetTransactionsByUserId(userId);
+
+            if (transactions == null || !transactions.Any())
+                return Enumerable.Empty<TransactionReadProSupViewModels>();
+
+            return _mapper.Map<IEnumerable<TransactionReadProSupViewModels>>(transactions);
+        }
+
         public async Task<IEnumerable<TransactionReadProSupViewModels>> GetTransactionWithDetails()
         {
             var transations = await _db.GetTransactionWithDetails();

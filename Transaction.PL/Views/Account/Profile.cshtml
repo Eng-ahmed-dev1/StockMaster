@@ -1,0 +1,274 @@
+﻿@model Transaction.BLL.UserViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+<link rel="stylesheet" href="~/css/Profile.css" />
+
+
+<div class="container mt-4">
+    <!-- Success Message -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Left Column - Profile Card -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="profile-header text-center position-relative">
+                    <!-- Status Badge -->
+                    @if (Model.IsActive)
+                    {
+                        <span class="status-badge badge bg-success">
+                            <i class="fas fa-circle"></i> Active
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="status-badge badge bg-secondary">
+                            <i class="fas fa-circle"></i> Inactive
+                        </span>
+                    }
+
+                    <!-- Profile Picture -->
+                    <div class="mb-3">
+                        @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                        {
+                            <img src="@Model.ProfilePictureUrl" alt="Profile" class="profile-img">
+                        }
+                        else
+                        {
+                            <div class="profile-img d-flex align-items-center justify-content-center bg-white text-primary"
+                                 style="font-size: 3rem; font-weight: bold;">
+                                @(Model.FullName?.Substring(0, 1).ToUpper() ?? Model.UserName?.Substring(0, 1).ToUpper() ?? "U")
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Name & Username -->
+                    <h3 class="mb-1">@(Model.FullName ?? Model.UserName)</h3>
+                    <p class="mb-0 opacity-75">@@@Model.UserName</p>
+                </div>
+
+                <div class="card-body">
+                    <!-- Roles -->
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">
+                            <i class="fas fa-user-tag me-2"></i>Roles
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <span class="badge badge-role @(role == "Admin" ? "bg-danger" : "bg-primary")">
+                                    <i class="fas @(role == "Admin" ? "fa-crown" : "fa-user") me-1"></i>
+                                    @role
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="row text-center mt-4 pt-3 border-top">
+                        <div class="col-6">
+                            <div class="mb-2">
+                                <i class="fas fa-calendar-alt text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <small class="text-muted d-block">Member Since</small>
+                            <strong>@Model.CreatedAt.ToString("MMM yyyy")</strong>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-2">
+                                <i class="fas fa-clock text-success" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <small class="text-muted d-block">Last Login</small>
+                            <strong>
+                                @(Model.LastLoginDate.HasValue? Model.LastLoginDate.Value.ToString("MMM dd") : "Never")
+                            </strong>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a asp-action="ChangePassword" class="btn btn-primary">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+                        <form asp-action="Logout" method="post" class="d-grid">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Profile Details -->
+        <div class="col-lg-8">
+            <!-- Personal Information -->
+            <div class="card shadow-sm border-0 mb-4 info-card">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-circle text-primary me-2"></i>
+                        Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-id-card me-1"></i>Full Name
+                            </label>
+                            <p class="fw-bold mb-0">@(Model.FullName ?? "Not provided")</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-user me-1"></i>Username
+                            </label>
+                            <p class="fw-bold mb-0">@Model.UserName</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-envelope me-1"></i>Email
+                            </label>
+                            <p class="fw-bold mb-0">@Model.Email</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-phone me-1"></i>Phone Number
+                            </label>
+                            <p class="fw-bold mb-0">@(Model.PhoneNumber ?? "Not provided")</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-venus-mars me-1"></i>Gender
+                            </label>
+                            <p class="fw-bold mb-0">
+                                @if (Model.Gender.HasValue)
+                                {
+                                    <span>@Model.Gender.Value.ToString()</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not specified</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small mb-1">
+                                <i class="fas fa-fingerprint me-1"></i>User ID
+                            </label>
+                            <p class="fw-bold mb-0">
+                                <small class="text-muted font-monospace">@Model.Id</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Activity -->
+            <div class="card shadow-sm border-0 mb-4 info-card">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line text-success me-2"></i>
+                        Account Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
+                                    <i class="fas fa-calendar-check text-primary" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Account Created</small>
+                                    <strong>@Model.CreatedAt.ToString("MMM dd, yyyy")</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 rounded p-3 me-3">
+                                    <i class="fas fa-sign-in-alt text-success" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Last Login</small>
+                                    <strong>
+                                        @if (Model.LastLoginDate.HasValue)
+                                        {
+                                            @Model.LastLoginDate.Value.ToString("MMM dd, yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Never</span>
+                                        }
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="@(Model.IsActive ? "bg-success" : "bg-danger") bg-opacity-10 rounded p-3 me-3">
+                                    <i class="fas fa-user-check @(Model.IsActive ? "text-success" : "text-danger")"
+                                       style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Status</small>
+                                    <strong class="@(Model.IsActive ? "text-success" : "text-danger")">
+                                        @(Model.IsActive ? "Active" : "Inactive")
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card shadow-sm border-0 info-card">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-warning me-2"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a asp-action="ShowAllTransactions" asp-controller="Transaction"
+                               class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-exchange-alt d-block mb-2" style="font-size: 1.5rem;"></i>
+                                <span class="d-block">My Transactions</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a asp-action="ChangePassword" class="btn btn-outline-warning w-100 py-3">
+                                <i class="fas fa-key d-block mb-2" style="font-size: 1.5rem;"></i>
+                                <span class="d-block">Change Password</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a asp-action="Show" asp-controller="Product"
+                               class="btn btn-outline-info w-100 py-3">
+                                <i class="fas fa-box d-block mb-2" style="font-size: 1.5rem;"></i>
+                                <span class="d-block">View Products</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

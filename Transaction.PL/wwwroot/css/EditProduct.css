@@ -1,0 +1,8 @@
+﻿.form-control:focus {
+    border-color: #495057;
+    box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}

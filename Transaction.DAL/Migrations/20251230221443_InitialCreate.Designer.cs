@@ -9,11 +9,11 @@ using TransactionsTask.Data;
 
 #nullable disable
 
-namespace TransactionsTask.Migrations
+namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    [Migration("20251226081420_AddIdentityTables")]
-    partial class AddIdentityTables
+    [Migration("20251230221443_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -340,6 +340,10 @@ namespace TransactionsTask.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
 
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
@@ -357,6 +361,8 @@ namespace TransactionsTask.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TransactionId");
+
+                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("ProductId");
 
@@ -418,19 +424,31 @@ namespace TransactionsTask.Migrations
 
             modelBuilder.Entity("TransactionsTask.Models.Transactions", b =>
                 {
+                    b.HasOne("Transaction.DAL.SystemUsers", "CreatedBy")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("TransactionsTask.Models.Products", "Product")
                         .WithMany("Transactions")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("TransactionsTask.Models.Suppliers", "Supplier")
                         .WithMany("Transactions")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("CreatedBy");
+
                     b.Navigation("Product");
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Transaction.DAL.SystemUsers", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("TransactionsTask.Models.Products", b =>

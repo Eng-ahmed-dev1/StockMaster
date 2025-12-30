@@ -13,7 +13,7 @@ namespace Transaction.BLL
 
         public AccountServices(
          UserManager<SystemUsers> userManager,
-         SignInManager<SystemUsers> signInManager,
+            SignInManager<SystemUsers> signInManager,
          RoleManager<IdentityRole> roleManager,
          IMapper mapper)
         {
@@ -61,7 +61,7 @@ namespace Transaction.BLL
             if (user is null)
                 return SignInResult.Failed;
 
-            if (user.IsActive == true || user.IsDeleted == true)
+            if (!user.IsActive || user.IsDeleted)
                 return SignInResult.Failed;
 
             var result = await _signInManager.PasswordSignInAsync(
@@ -116,16 +116,17 @@ namespace Transaction.BLL
 
             var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             if (result.Succeeded)
+            {
                 user.UpdatedAt = DateTime.UtcNow;
                 await _userManager.UpdateAsync(user);
+            }
 
             return result;
         }
 
         public async Task<IEnumerable<string>> GetUserRolesAsync(string userId)
         {
-            var user = await _userManager.FindByNameAsync(userId);
-
+            var user = await _userManager.FindByIdAsync(userId); 
             if (user is null)
                 return new List<string>();
 
@@ -192,7 +193,7 @@ namespace Transaction.BLL
                 {
                     Description = $"The {user.FullName} is not in the role {roleName}"
                 });
-
+                
             return await _userManager.RemoveFromRoleAsync(user, roleName);
         }
 

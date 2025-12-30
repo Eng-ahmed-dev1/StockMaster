@@ -1,0 +1,11 @@
+﻿.info-row:hover {
+    background-color: #f8f9fa;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}

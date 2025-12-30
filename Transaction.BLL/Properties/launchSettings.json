@@ -1,12 +1,1 @@
-{
-  "profiles": {
-    "Transaction.BLL": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:55562;http://localhost:55563"
-    }
-  }
-}
+{}

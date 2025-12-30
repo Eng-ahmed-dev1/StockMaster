@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Transaction.DAL
@@ -6,76 +9,85 @@ namespace Transaction.DAL
     public static class IdentityContextSeedData
     {
         public static async Task<bool> SeedData(
-          UserManager<SystemUsers> userManagers,
-          RoleManager<IdentityRole> roleManagers)
+            UserManager<SystemUsers> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             try
             {
-                var hasUsers = userManagers.Users.Any();
-                var hasRoles = roleManagers.Roles.Any();
-
-                if (hasUsers && hasRoles) return false;
-
                 // ================= ROLES =================
-                if (!hasRoles)
-                {
-                    var roles = new List<IdentityRole>
-                    {
-                        new() { Name = "Admin", NormalizedName = "ADMIN" },
-                        new() { Name = "User", NormalizedName = "USER" }
-                    };
-
-                    foreach (var role in roles)
-                    {
-                        if (!await roleManagers.RoleExistsAsync(role.Name!))
-                        {
-                            await roleManagers.CreateAsync(role);
-                        }
-                    }
-                }
+                await SeedRolesAsync(roleManager);
 
                 // ================= USERS =================
-                if (!hasUsers)
-                {
-                    var admin = new SystemUsers
-                    {
-                        FullName = "Ahmed Alaa",
-                        UserName = "DevAhmed",
-                        Email = "ahmed@gmail.com",
-                        PhoneNumber = "01030939232",
-                        EmailConfirmed = true,
-                        IsActive = true
-                    };
-
-                    var adminResult = await userManagers.CreateAsync(admin, "P@ssw0rd");
-                    if (adminResult.Succeeded)
-                    {
-                        await userManagers.AddToRoleAsync(admin, "Admin");
-                    }
-
-                    var normalUser = new SystemUsers
-                    {
-                        FullName = "Mohamed",
-                        UserName = "DevMohamed",
-                        Email = "mohaed@gmail.com",
-                        PhoneNumber = "01282845813",
-                        EmailConfirmed = true,
-                        IsActive = true
-                    };
-
-                    var userResult = await userManagers.CreateAsync(normalUser, "P@ssw0rd");
-                    if (userResult.Succeeded)
-                    {
-                        await userManagers.AddToRoleAsync(normalUser, "User");
-                    }
-                }
+                await SeedUsersAsync(userManager);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException?.Message ?? ex.Message);
+                Console.WriteLine($"Error seeding data: {ex.InnerException?.Message ?? ex.Message}");
                 return false;
+            }
+        }
+
+        private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            var roles = new List<string> { "Admin", "User" };
+
+            foreach (var roleName in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    await roleManager.CreateAsync(new IdentityRole
+                    {
+                        Name = roleName,
+                        NormalizedName = roleName.ToUpper()
+                    });
+                }
+            }
+        }
+
+        private static async Task SeedUsersAsync(UserManager<SystemUsers> userManager)
+        {
+            // ========== Admin User ==========
+            var adminEmail = "ahmed@gmail.com";
+            if (await userManager.FindByEmailAsync(adminEmail) == null)
+            {
+                var admin = new SystemUsers
+                {
+                    FullName = "Ahmed Alaa",
+                    UserName = "DevAhmed",
+                    Email = adminEmail,
+                    PhoneNumber = "01030939232",
+                    EmailConfirmed = true,
+                    IsActive = true
+                };
+
+                var adminResult = await userManager.CreateAsync(admin, "P@ssw0rd");
+                if (adminResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+                }
+            }
+
+            // ========== Normal User ==========
+            var userEmail = "mohamed@gmail.com"; 
+            if (await userManager.FindByEmailAsync(userEmail) == null)
+            {
+                var normalUser = new SystemUsers
+                {
+                    FullName = "Mohamed",
+                    UserName = "DevMohamed",
+                    Email = userEmail,
+                    PhoneNumber = "01282845813",
+                    EmailConfirmed = true,
+                    IsActive = true
+                };
+
+                var userResult = await userManager.CreateAsync(normalUser, "P@ssw0rd");
+                if (userResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(normalUser, "User");
+                }
             }
         }
     }
