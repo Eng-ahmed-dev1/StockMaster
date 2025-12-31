@@ -34,9 +34,10 @@ namespace Transaction.DAL
         public DateTime? DateOfBirth { get; set; }
         public Gender? Gender { get; set; }
 
-        // Navigation Property
-        public ICollection<Transactions> Transactions { get; set; } = new HashSet<Transactions>(); // 👈
+        public ICollection<Transactions> CreatedTransactions { get; set; } = new HashSet<Transactions>();
+        public ICollection<Transactions> SuppliedTransactions { get; set; } = new HashSet<Transactions>();
     }
+
 
     public enum Gender
     {

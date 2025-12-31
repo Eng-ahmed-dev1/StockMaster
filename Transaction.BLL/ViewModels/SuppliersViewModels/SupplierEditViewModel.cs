@@ -3,7 +3,7 @@ namespace Transaction.BLL
 {
     public class SupplierEditViewModel
     {
-        public int SupplierId { get; set; }
+        public string SupplierId { get; set; }
         [MaxLength(100, ErrorMessage = "The Supplier must have a name")]
         public string SupplierName { get; set; }
         [EmailAddress, MaxLength(100)]

@@ -35,15 +35,16 @@
                     }
 
                     <!-- Profile Picture -->
-                    <div class="mb-3">
+                    <div class="mb-3 text-center">
                         @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
                         {
-                            <img src="@Model.ProfilePictureUrl" alt="Profile" class="profile-img">
+                            <img src="@Model.ProfilePictureUrl" alt="Profile"
+                                 class="profile-img rounded-circle mx-auto">
                         }
                         else
                         {
-                            <div class="profile-img d-flex align-items-center justify-content-center bg-white text-primary"
-                                 style="font-size: 3rem; font-weight: bold;">
+                            <div class="profile-img rounded-circle mx-auto d-flex align-items-center justify-content-center bg-white text-primary"
+                                 style="font-size: 3rem; font-weight: bold; width: 150px; height: 150px;">
                                 @(Model.FullName?.Substring(0, 1).ToUpper() ?? Model.UserName?.Substring(0, 1).ToUpper() ?? "U")
                             </div>
                         }
@@ -251,13 +252,29 @@
                                 <span class="d-block">Change Password</span>
                             </a>
                         </div>
-                        <div class="col-md-4">
-                            <a asp-action="Show" asp-controller="Product"
-                               class="btn btn-outline-info w-100 py-3">
-                                <i class="fas fa-box d-block mb-2" style="font-size: 1.5rem;"></i>
-                                <span class="d-block">View Products</span>
-                            </a>
-                        </div>
+
+                        <!-- Show Products link only for Admin users -->
+                        @if (Model.Roles.Contains("Admin"))
+                        {
+                            <div class="col-md-4">
+                                <a asp-action="Show" asp-controller="Product"
+                                   class="btn btn-outline-info w-100 py-3">
+                                    <i class="fas fa-box d-block mb-2" style="font-size: 1.5rem;"></i>
+                                    <span class="d-block">View Products</span>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- For non-admin users, show another relevant action -->
+                            <div class="col-md-4">
+                                <a asp-action="ShowAllTransactions" asp-controller="Transaction"
+                                   class="btn btn-outline-success w-100 py-3">
+                                    <i class="fas fa-plus-circle d-block mb-2" style="font-size: 1.5rem;"></i>
+                                    <span class="d-block">New Transaction</span>
+                                </a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

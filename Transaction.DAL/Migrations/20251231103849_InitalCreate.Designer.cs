@@ -12,8 +12,8 @@ using TransactionsTask.Data;
 namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    [Migration("20251230221443_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251231103849_InitalCreate")]
+    partial class InitalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,37 +301,6 @@ namespace Transaction.DAL.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("TransactionsTask.Models.Suppliers", b =>
-                {
-                    b.Property<int>("SupplierId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SupplierId"));
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("SupplierEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SupplierName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("SupplierId");
-
-                    b.HasIndex("SupplierEmail")
-                        .IsUnique();
-
-                    b.ToTable("Suppliers");
-                });
-
             modelBuilder.Entity("TransactionsTask.Models.Transactions", b =>
                 {
                     b.Property<int>("TransactionId")
@@ -347,11 +316,14 @@ namespace Transaction.DAL.Migrations
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductsProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SupplierId")
-                        .HasColumnType("int");
+                    b.Property<string>("SupplierId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
@@ -366,7 +338,11 @@ namespace Transaction.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("ProductsProductId");
+
                     b.HasIndex("SupplierId");
+
+                    b.HasIndex("TransactionDate");
 
                     b.ToTable("Transactions");
                 });
@@ -425,17 +401,22 @@ namespace Transaction.DAL.Migrations
             modelBuilder.Entity("TransactionsTask.Models.Transactions", b =>
                 {
                     b.HasOne("Transaction.DAL.SystemUsers", "CreatedBy")
-                        .WithMany("Transactions")
+                        .WithMany("CreatedTransactions")
                         .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TransactionsTask.Models.Products", "Product")
-                        .WithMany("Transactions")
-                        .HasForeignKey("ProductId");
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TransactionsTask.Models.Suppliers", "Supplier")
+                    b.HasOne("TransactionsTask.Models.Products", null)
                         .WithMany("Transactions")
+                        .HasForeignKey("ProductsProductId");
+
+                    b.HasOne("Transaction.DAL.SystemUsers", "Supplier")
+                        .WithMany("SuppliedTransactions")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -448,15 +429,12 @@ namespace Transaction.DAL.Migrations
 
             modelBuilder.Entity("Transaction.DAL.SystemUsers", b =>
                 {
-                    b.Navigation("Transactions");
+                    b.Navigation("CreatedTransactions");
+
+                    b.Navigation("SuppliedTransactions");
                 });
 
             modelBuilder.Entity("TransactionsTask.Models.Products", b =>
-                {
-                    b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("TransactionsTask.Models.Suppliers", b =>
                 {
                     b.Navigation("Transactions");
                 });

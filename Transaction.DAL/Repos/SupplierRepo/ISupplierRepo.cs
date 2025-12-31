@@ -1,15 +1,18 @@
-﻿using TransactionsTask.Models;
+﻿using Transaction.DAL;
+using TransactionsTask.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TransactionsTask.Repos.SupplierRepo
 {
     public interface ISupplierRepo
     {
-        Task<Suppliers?> GetSupplierId(int id);
-        Task<Suppliers?> GetSupplierIdWithDetails(int id);
-        Task<IEnumerable<Suppliers>> GetSuppliers();
-        Task DeleteSupplier(Suppliers supplier);
-        Task UpdateSupplier(Suppliers supplier);
-        Task AddSupplier(Suppliers supplier);
-        Task <bool> FindDuplicateEmail (string Email);
+        Task<SystemUsers?> GetSupplierId(string id);
+        Task<SystemUsers?> GetSupplierIdWithDetails(string id);
+        Task<IEnumerable<SystemUsers>> GetSuppliers();
+        Task DeleteSupplier(SystemUsers supplier);
+        Task UpdateSupplier(SystemUsers supplier);
+        Task AddSupplier(SystemUsers supplier);
+        Task<bool> FindDuplicateEmail(string Email);
     }
 }

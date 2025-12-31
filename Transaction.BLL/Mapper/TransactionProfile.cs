@@ -17,7 +17,7 @@ namespace Transaction.BLL
                 .ForMember(dest => dest.ProductName,
                     opt => opt.MapFrom(src => src.Product != null ? src.Product.ProductName : "N/A"))
                 .ForMember(dest => dest.SupplierName,
-                    opt => opt.MapFrom(src => src.Supplier != null ? src.Supplier.SupplierName : "N/A"));
+                    opt => opt.MapFrom(src => src.Supplier != null ? src.Supplier.UserName : "N/A"));
 
             // Map ViewModel For Edit 
             CreateMap<Transactions, TransactionEditViewModel>().ReverseMap();

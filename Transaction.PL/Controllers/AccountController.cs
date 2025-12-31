@@ -57,7 +57,7 @@ namespace Transaction.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel loginView, string? returnUrl = null)
+        public async Task<IActionResult>Login(LoginViewModel loginView, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {

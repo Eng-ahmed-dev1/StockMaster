@@ -6,289 +6,55 @@
     <title>@ViewData["Title"] - TransactionsTask</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransactionsTask.styles.css" asp-append-version="true" />
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-bg: #f8f9fa;
-            --dark-text: #2c3e50;
-            --border-color: #dee2e6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--light-bg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 60px;
-        }
-
-        /* Navbar Styles */
-        .navbar-custom {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 0;
-        }
-
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white !important;
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-            .navbar-brand:hover {
-                transform: translateY(-2px);
-            }
-
-            .navbar-brand i {
-                font-size: 1.8rem;
-                color: var(--secondary-color);
-            }
-
-        .navbar-nav {
-            gap: 0.5rem;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-            font-weight: 500;
-            padding: 1rem 1.25rem !important;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
-
-            .nav-link:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: white !important;
-                transform: translateY(-2px);
-            }
-
-            .nav-link.active {
-                background: var(--secondary-color);
-                color: white !important;
-                box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-            }
-
-            .nav-link i {
-                font-size: 1.1rem;
-            }
-
-        /* Mobile Menu Toggle */
-        .navbar-toggler {
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 0.5rem 0.75rem;
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        /* Footer Styles - ثابت في الأسفل */
-        .footer {
-            background: white;
-            border-top: 3px solid var(--secondary-color);
-            padding: 0.5rem 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-text {
-            color: #6c757d;
-            margin: 0;
-            font-size: 0.8rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-            .footer-links a {
-                color: #6c757d;
-                text-decoration: none;
-                transition: color 0.3s ease;
-                font-weight: 500;
-                font-size: 0.8rem;
-                display: flex;
-                align-items: center;
-                gap: 0.4rem;
-            }
-
-                .footer-links a:hover {
-                    color: var(--secondary-color);
-                }
-
-        /* Page Header Animation */
-        keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        main {
-            animation: fadeInDown 0.6s ease;
-        }
-
-        /* Responsive Breakpoints */
-        media (max-width: 991px) {
-            body {
-                padding-bottom: 60px;
-            }
-
-            .navbar-nav {
-                padding: 1rem 0;
-                gap: 0.25rem;
-            }
-
-            .nav-link {
-                padding: 0.75rem 1rem !important;
-                border-radius: 6px;
-            }
-
-            .navbar-collapse {
-                background: rgba(0, 0, 0, 0.05);
-                margin-top: 1rem;
-                padding: 0.5rem;
-                border-radius: 8px;
-            }
-        }
-
-        media (max-width: 768px) {
-            body {
-                padding-bottom: 70px;
-            }
-
-            .navbar-brand {
-                font-size: 1.25rem;
-            }
-
-                .navbar-brand i {
-                    font-size: 1.5rem;
-                }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 1.5rem;
-            }
-
-            .footer-links {
-                justify-content: center;
-            }
-
-            .main-content {
-                padding: 1.5rem 0;
-            }
-
-            .footer {
-                padding: 0.6rem 0;
-            }
-        }
-
-        media (max-width: 576px) {
-            body {
-                padding-bottom: 80px;
-            }
-
-            .navbar-brand {
-                font-size: 1.1rem;
-            }
-
-            .nav-link {
-                font-size: 0.9rem;
-            }
-
-            .footer-text {
-                font-size: 0.85rem;
-            }
-
-            .footer-links a {
-                font-size: 0.85rem;
-            }
-
-            .footer-links {
-                gap: 1rem;
-            }
-        }
-
-        /* Utility Classes */
-        .badge-custom {
-            background: var(--secondary-color);
-            color: white;
-            padding: 0.35rem 0.65rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-    </style>
+<link rel="stylesheet" href="~/css/_ِAuthentication.css" />
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-animated">
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+        <div class="bg-shape bg-shape-4"></div>
+        <div class="bg-shape bg-shape-5"></div>
+
+        <!-- Floating Particles -->
+        <div class="particle" style="left: 5%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 15%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 25%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 35%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 45%; animation-delay: 8s;"></div>
+        <div class="particle" style="left: 55%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 65%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 75%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 85%; animation-delay: 7s;"></div>
+        <div class="particle" style="left: 95%; animation-delay: 9s;"></div>
+    </div>
+
+    <!-- Wave Animation -->
+    <div class="wave-container">
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+    </div>
+
+    <!-- Logo Badge -->
+    <div class="logo-badge">
+        <i class="fas fa-chart-line"></i>
+    </div>
+
+    <!-- Main Content -->
     <div class="container main-content">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <p class="footer-text">
-                    &copy; 2025 All rights reserved.
-                    Devloped By DevAhmed
+                    &copy; 2025 All rights reserved. Developed By DevAhmed
                 </p>
                 <div class="footer-links">
                     <a asp-area="" asp-controller="Home" asp-action="Privacy">

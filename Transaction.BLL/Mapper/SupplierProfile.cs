@@ -12,13 +12,16 @@ namespace Transaction.BLL
         public SupplierProfile()
         {
             // Map ViewModel For Create
-            CreateMap<SupplierCreateViewModel, Suppliers>()
-                .ForMember(dest => dest.Transactions , opt => opt.Ignore());
+            CreateMap<SupplierCreateViewModel, SystemUsers>()
+           .ForMember(dest => dest.CreatedTransactions, opt => opt.Ignore())
+           .ForMember(dest => dest.SuppliedTransactions, opt => opt.Ignore());
+
             // Map ViewModel For Read 
-            CreateMap<Suppliers, SupplierReadViewModel>()
-                .ForMember(dest => dest.Transactions , p => p.MapFrom(src => src.Transactions));
+            CreateMap<SystemUsers, SupplierReadViewModel>()
+             .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.SuppliedTransactions));
+
             // Map ViewModel For Edit 
-            CreateMap<Suppliers, SupplierEditViewModel>().ReverseMap();
+            CreateMap<SystemUsers, SupplierEditViewModel>().ReverseMap();
             CreateMap<SupplierReadViewModel, SupplierEditViewModel>();
         }
     }

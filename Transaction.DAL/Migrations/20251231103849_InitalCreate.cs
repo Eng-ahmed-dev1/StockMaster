@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Transaction.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,21 +78,6 @@ namespace Transaction.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Suppliers",
-                columns: table => new
-                {
-                    SupplierId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SupplierName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SupplierEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Suppliers", x => x.SupplierId);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,10 +194,11 @@ namespace Transaction.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: true),
-                    SupplierId = table.Column<int>(type: "int", nullable: true),
+                    SupplierId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductsProductId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -224,16 +210,22 @@ namespace Transaction.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Transactions_AspNetUsers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
                         name: "FK_Transactions_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "ProductId");
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transactions_Suppliers_SupplierId",
-                        column: x => x.SupplierId,
-                        principalTable: "Suppliers",
-                        principalColumn: "SupplierId",
-                        onDelete: ReferentialAction.SetNull);
+                        name: "FK_Transactions_Products_ProductsProductId",
+                        column: x => x.ProductsProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -276,12 +268,6 @@ namespace Transaction.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Suppliers_SupplierEmail",
-                table: "Suppliers",
-                column: "SupplierEmail",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_CreatedByUserId",
                 table: "Transactions",
                 column: "CreatedByUserId");
@@ -292,9 +278,19 @@ namespace Transaction.DAL.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transactions_ProductsProductId",
+                table: "Transactions",
+                column: "ProductsProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_SupplierId",
                 table: "Transactions",
                 column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_TransactionDate",
+                table: "Transactions",
+                column: "TransactionDate");
         }
 
         /// <inheritdoc />
@@ -326,9 +322,6 @@ namespace Transaction.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Suppliers");
         }
     }
 }

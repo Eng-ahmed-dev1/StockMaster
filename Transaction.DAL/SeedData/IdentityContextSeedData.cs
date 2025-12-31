@@ -31,7 +31,7 @@ namespace Transaction.DAL
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            var roles = new List<string> { "Admin", "User" };
+            var roles = new List<string> { "Admin", "Supplier" };
 
             foreach (var roleName in roles)
             {
@@ -59,7 +59,9 @@ namespace Transaction.DAL
                     Email = adminEmail,
                     PhoneNumber = "01030939232",
                     EmailConfirmed = true,
-                    IsActive = true
+                    IsActive = true,
+                    Gender = Gender.Male,
+
                 };
 
                 var adminResult = await userManager.CreateAsync(admin, "P@ssw0rd");
@@ -80,13 +82,14 @@ namespace Transaction.DAL
                     Email = userEmail,
                     PhoneNumber = "01282845813",
                     EmailConfirmed = true,
-                    IsActive = true
+                    IsActive = true,
+                    Gender = Gender.Male,
                 };
 
                 var userResult = await userManager.CreateAsync(normalUser, "P@ssw0rd");
                 if (userResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(normalUser, "User");
+                    await userManager.AddToRoleAsync(normalUser, "Supplier");
                 }
             }
         }

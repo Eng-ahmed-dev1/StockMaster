@@ -3,69 +3,131 @@
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_Authentication.cshtml";
 }
-
-<link rel="stylesheet" href="~/css/Login.css" />
+<link rel="stylesheet"href="~/css/Login.css" />
 
 <div class="login-container">
-    <div class="login-card">
-        <div class="login-header">
-            <h2>Welcome Back</h2>
-            <p>Please login to your account</p>
-        </div>
-
-        <div class="login-body">
-            <form asp-action="Login" asp-controller="Account" method="post">
-                @if (ViewData.ModelState.ErrorCount > 0)
-                {
-                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
-                }
-
-                <div class="form-group">
-                    <label asp-for="EmailOrUserName" class="form-label">Email or Username</label>
-                    <input asp-for="EmailOrUserName"
-                           class="form-control"
-                           placeholder="Enter your email or username"
-                           autofocus />
-                    <span asp-validation-for="EmailOrUserName" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <!-- Login Card -->
+            <div class="card">
+                <!-- Card Header -->
+                <div class="card-header py-4 text-center">
+                    <div class="mb-3">
+                        <div class="icon-circle mb-3 mx-auto">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="h4 mb-1">Login</h3>
+                        <p class="small mb-0">Access your account</p>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Password" class="form-label">Password</label>
-                    <input asp-for="Password"
-                           class="form-control"
-                           placeholder="Enter your password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="alert mb-4">
+                            <div class="d-flex">
+                                <i class="fas fa-exclamation-circle mt-1 me-2"></i>
+                                <div>
+                                    <h6 class="alert-heading mb-1">Login failed</h6>
+                                    <div asp-validation-summary="All" class="small mb-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
-                <div class="form-check">
-                    <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
-                    <label asp-for="RememberMe" class="form-check-label">
-                        Keep me logged in
-                    </label>
-                </div>
+                    <form asp-action="Login" asp-controller="Account" method="post">
+                        <!-- Email/Username -->
+                        <div class="mb-3">
+                            <label asp-for="EmailOrUserName" class="form-label">Email or Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input asp-for="EmailOrUserName"
+                                       class="form-control"
+                                       placeholder="Enter email or username"
+                                       autofocus>
+                            </div>
+                            <span asp-validation-for="EmailOrUserName" class="text-danger small"></span>
+                        </div>
 
-                <button type="submit" class="btn-login">
-                    Sign In
-                </button>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input asp-for="Password"
+                                       type="password"
+                                       class="form-control"
+                                       placeholder="Enter password"
+                                       id="password">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
 
-                <div class="forgot-password">
-                    <a asp-action="ForgotPassword" asp-controller="Account">
-                        Forgot your password?
-                    </a>
-                </div>
+                        <!-- Remember Me -->
+                        <div class="mb-4 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
+                            <label asp-for="RememberMe" class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
 
-                <div class="divider">
-                    <span>OR</span>
-                </div>
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i><span>Sign In</span>
+                            </button>
+                        </div>
 
-                <div class="signup-link">
-                    <p>Don't have an account? <a asp-action="Register" asp-controller="Account">Sign up now</a></p>
+                        <!-- Links -->
+                        <div class="text-center">
+                            <a asp-action="ForgotPassword" asp-controller="Account"
+                               class="text-decoration-none small d-block mb-2">
+                                <i class="fas fa-key me-1"></i>Forgot password?
+                            </a>
+                            <div class="border-top pt-3">
+                                <p class="text-muted small mb-2">Don't have an account?</p>
+                                <a asp-action="Register" asp-controller="Account"
+                                   class="btn btn-outline-secondary mt-2">
+                                    <i class="fas fa-user-plus me-1"></i>Create Account
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<script>
+    // Toggle password visibility
+    document.getElementById('togglePassword')?.addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            passwordInput.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    });
+
+    // Auto-hide alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>

@@ -3,472 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TransactionsTask</title>
+    <title>@ViewData["Title"] - Transactions</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/profile-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/_Layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransactionsTask.styles.css" asp-append-version="true" />
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-bg: #f8f9fa;
-            --dark-text: #2c3e50;
-            --border-color: #dee2e6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--light-bg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 60px;
-        }
-
-        /* Navbar Styles */
-        .navbar-custom {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 0;
-        }
-
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white !important;
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-            .navbar-brand:hover {
-                transform: translateY(-2px);
-            }
-
-            .navbar-brand i {
-                font-size: 1.8rem;
-                color: var(--secondary-color);
-            }
-
-        .navbar-nav {
-            gap: 0.5rem;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-            font-weight: 500;
-            padding: 1rem 1.25rem !important;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
-
-            .nav-link:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: white !important;
-                transform: translateY(-2px);
-            }
-
-            .nav-link.active {
-                background: var(--secondary-color);
-                color: white !important;
-                box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-            }
-
-            .nav-link i {
-                font-size: 1.1rem;
-            }
-
-        /* Profile Dropdown */
-        .profile-dropdown {
-            position: relative;
-        }
-
-        .profile-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: rgba(255, 255, 255, 0.85) !important;
-            text-decoration: none;
-            padding: 0.5rem 1rem !important;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-            .profile-toggle:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: white !important;
-            }
-
-        .profile-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--secondary-color), #8e44ad);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .profile-dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            min-width: 300px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            margin-top: 10px;
-            overflow: hidden;
-            animation: slideDown 0.3s ease;
-        }
-
-        .profile-dropdown.open .profile-dropdown-menu {
-            display: block;
-        }
-
-        .profile-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .profile-avatar-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: white;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
-            border: 4px solid white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile-info {
-            padding: 1.5rem;
-        }
-
-        .profile-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .profile-email {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-            .profile-actions .btn {
-                flex: 1;
-                padding: 0.5rem;
-                font-size: 0.85rem;
-            }
-
-        .profile-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            border-top: 1px solid #eee;
-        }
-
-            .profile-links li {
-                border-bottom: 1px solid #eee;
-            }
-
-                .profile-links li:last-child {
-                    border-bottom: none;
-                }
-
-            .profile-links a {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 0.75rem 1rem;
-                color: #555;
-                text-decoration: none;
-                transition: all 0.3s ease;
-            }
-
-                .profile-links a:hover {
-                    background: #f8f9fa;
-                    color: var(--secondary-color);
-                }
-
-                .profile-links a i {
-                    width: 20px;
-                    color: #888;
-                }
-
-        /* Mobile Menu Toggle */
-        .navbar-toggler {
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 0.5rem 0.75rem;
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        /* Footer Styles - ثابت في الأسفل */
-        .footer {
-            background: white;
-            border-top: 3px solid var(--secondary-color);
-            padding: 0.5rem 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-text {
-            color: #6c757d;
-            margin: 0;
-            font-size: 0.8rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-            .footer-links a {
-                color: #6c757d;
-                text-decoration: none;
-                transition: color 0.3s ease;
-                font-weight: 500;
-                font-size: 0.8rem;
-                display: flex;
-                align-items: center;
-                gap: 0.4rem;
-            }
-
-                .footer-links a:hover {
-                    color: var(--secondary-color);
-                }
-
-        /* Animations */
-        @@keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @@keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        main {
-            animation: fadeInDown 0.6s ease;
-        }
-
-        /* Responsive Breakpoints */
-        @@media (max-width: 991px) {
-            body {
-                padding-bottom: 60px;
-            }
-
-            .navbar-nav {
-                padding: 1rem 0;
-                gap: 0.25rem;
-            }
-
-            .nav-link {
-                padding: 0.75rem 1rem !important;
-                border-radius: 6px;
-            }
-
-            .navbar-collapse {
-                background: rgba(0, 0, 0, 0.05);
-                margin-top: 1rem;
-                padding: 0.5rem;
-                border-radius: 8px;
-            }
-
-            .profile-dropdown-menu {
-                position: static;
-                margin-top: 1rem;
-                box-shadow: none;
-                background: transparent;
-            }
-
-            .profile-header {
-                border-radius: 12px;
-            }
-
-            .profile-info {
-                background: white;
-                border-radius: 12px;
-                margin-top: 1rem;
-            }
-        }
-
-        @@media (max-width: 768px) {
-            body {
-                padding-bottom: 70px;
-            }
-
-            .navbar-brand {
-                font-size: 1.25rem;
-            }
-
-                .navbar-brand i {
-                    font-size: 1.5rem;
-                }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 1.5rem;
-            }
-
-            .footer-links {
-                justify-content: center;
-            }
-
-            .main-content {
-                padding: 1.5rem 0;
-            }
-
-            .footer {
-                padding: 0.6rem 0;
-            }
-        }
-
-        @@media (max-width: 576px) {
-            body {
-                padding-bottom: 80px;
-            }
-
-            .navbar-brand {
-                font-size: 1.1rem;
-            }
-
-            .nav-link {
-                font-size: 0.9rem;
-            }
-
-            .footer-text {
-                font-size: 0.85rem;
-            }
-
-            .footer-links a {
-                font-size: 0.85rem;
-            }
-
-            .footer-links {
-                gap: 1rem;
-            }
-        }
-
-        /* Utility Classes */
-        .badge-custom {
-            background: var(--secondary-color);
-            color: white;
-            padding: 0.35rem 0.65rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .user-role-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .role-admin {
-            background: linear-gradient(45deg, #dc3545, #e35d6a);
-            color: white;
-        }
-
-        .role-user {
-            background: linear-gradient(45deg, #28a745, #34ce57);
-            color: white;
-        }
-
-        .role-manager {
-            background: linear-gradient(45deg, #007bff, #5a9dff);
-            color: white;
-        }
-    </style>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -476,7 +18,7 @@
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <i class="fas fa-exchange-alt"></i>
-                    Transactions Task
+                    Transactions
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -484,114 +26,144 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="ShowSuppliers" asp-controller="Supplier">
-                                <i class="fas fa-truck"></i>
-                                Suppliers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="ShowAllTransactions" asp-controller="Transaction">
-                                <i class="fas fa-receipt"></i>
-                                Transactions
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="Show" asp-controller="Product">
-                                <i class="fas fa-box"></i>
-                                Products
-                            </a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="ShowAllTransactions" asp-controller="Transaction">
+                                    <i class="fas fa-receipt"></i>
+                                    Transactions
+                                </a>
+                            </li>
 
-                        <!-- Profile Dropdown -->
-                        <li class="nav-item profile-dropdown" id="profileDropdown">
-                            <a href="#" class="nav-link profile-toggle" id="profileToggle">
-                                <div class="profile-avatar" id="userAvatar">
-                                    @{
-                                        var userInitial = "U";
-                                        if (User.Identity?.IsAuthenticated == true)
-                                        {
-                                            userInitial = User.Identity.Name?[0].ToString().ToUpper() ?? "U";
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="ShowSuppliers" asp-controller="Supplier">
+                                        <i class="fas fa-truck"></i>
+                                        Suppliers
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Show" asp-controller="Product">
+                                        <i class="fas fa-box"></i>
+                                        Products
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Login" asp-controller="Account">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Register" asp-controller="Account">
+                                    <i class="fas fa-user-plus"></i>
+                                    Register
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item profile-dropdown" id="profileDropdown">
+                                <a href="#" class="nav-link profile-toggle" id="profileToggle">
+                                    <div class="profile-avatar" id="userAvatar">
+                                        @{
+                                            var userInitial = "U";
+                                            if (User.Identity?.Name != null)
+                                            {
+                                                userInitial = User.Identity.Name[0].ToString().ToUpper();
+                                            }
                                         }
-                                    }
-                                    @userInitial
-                                </div>
-                                <span id="userName">Profile</span>
-                                <i class="fas fa-chevron-down ms-1"></i>
-                            </a>
-
-                            <!-- Profile Dropdown Menu -->
-                            <div class="profile-dropdown-menu">
-                                <div class="profile-header">
-                                    <div class="profile-avatar-large" id="profileAvatarLarge">
                                         @userInitial
                                     </div>
-                                    <h5 id="profileName">@User.Identity?.Name</h5>
-                                    <p id="profileEmail">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</p>
-                                    <div id="profileRoles">
-                                        @if (User.IsInRole("Admin"))
-                                        {
-                                            <span class="user-role-badge role-admin">Admin</span>
-                                        }
-                                        else if (User.IsInRole("Manager"))
-                                        {
-                                            <span class="user-role-badge role-manager">Manager</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="user-role-badge role-user">User</span>
-                                        }
-                                    </div>
-                                </div>
+                                    <span id="userName">
+                                        @User.Identity?.Name
+                                    </span>
+                                    <i class="fas fa-chevron-down ms-1"></i>
+                                </a>
 
-                                <div class="profile-info">
-                                    <div class="profile-actions">
-                                        <a asp-action="Profile" asp-controller="Account" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-user me-1"></i>View Profile
-                                        </a>
-                                        <a asp-action="ChangePassword" asp-controller="Account" class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-key me-1"></i>Password
-                                        </a>
+                                <!-- Profile Dropdown Menu -->
+                                <div class="profile-dropdown-menu">
+                                    <div class="profile-header">
+                                        <div class="profile-avatar-large" id="profileAvatarLarge">
+                                            @userInitial
+                                        </div>
+                                        <h5 id="profileName">@User.Identity?.Name</h5>
+                                        <p id="profileEmail">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</p>
+                                        <div id="profileRoles">
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <span class="user-role-badge role-admin">Admin</span>
+                                            }
+                                            else if (User.IsInRole("Manager"))
+                                            {
+                                                <span class="user-role-badge role-manager">Manager</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="user-role-badge role-user">User</span>
+                                            }
+                                        </div>
                                     </div>
 
-                                    <ul class="profile-links">
-                                        <li>
-                                            <a asp-action="Profile" asp-controller="Account">
-                                                <i class="fas fa-user-cog"></i>
-                                                Account Settings
+                                    <div class="profile-info">
+                                        <div class="profile-actions">
+                                            <a asp-action="Profile" asp-controller="Account" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-user me-1"></i>View Profile
                                             </a>
-                                        </li>
-                                        <li>
-                                            <a asp-action="ShowAllTransactions" asp-controller="Transaction">
-                                                <i class="fas fa-history"></i>
-                                                My Transactions
+                                            <a asp-action="ChangePassword" asp-controller="Account" class="btn btn-outline-secondary btn-sm">
+                                                <i class="fas fa-key me-1"></i>Password
                                             </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fas fa-bell"></i>
-                                                Notifications
-                                                <span class="badge bg-danger ms-auto">3</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fas fa-cog"></i>
-                                                Preferences
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form asp-action="Logout" asp-controller="Account" method="post" id="logoutForm">
-                                                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
-                                                    <i class="fas fa-sign-out-alt"></i>
-                                                    Logout
+                                        </div>
+
+                                        <ul class="profile-links">
+                                            <li>
+                                                <a asp-action="Profile" asp-controller="Account">
+                                                    <i class="fas fa-user-cog"></i>
+                                                    Account Settings
                                                 </a>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                            <li>
+                                                <a asp-action="ShowAllTransactions" asp-controller="Transaction">
+                                                    <i class="fas fa-history"></i>
+                                                    My Transactions
+                                                </a>
+                                            </li>
+                                            @if (User.IsInRole("Admin"))                                          
+                                            {
+                                                <li>
+                                                    <a asp-action="ShowSuppliers" asp-controller="Supplier">
+                                                        <i class="fas fa-truck"></i>
+                                                        Suppliers
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-action="Show" asp-controller="Product">
+                                                        <i class="fas fa-box"></i>
+                                                        Products
+                                                    </a>
+                                                </li>
+                                            }
+                                            <li>
+                                                <form asp-action="Logout" asp-controller="Account" method="post" id="logoutForm">
+                                                    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+                                                        <i class="fas fa-sign-out-alt"></i>
+                                                        Logout
+                                                    </a>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -648,6 +220,10 @@
                         link.classList.add('active');
                     } else if (currentPath.includes('/product') && href.includes('Product')) {
                         link.classList.add('active');
+                    } else if (currentPath.includes('/account/login') && href.includes('Login')) {
+                        link.classList.add('active');
+                    } else if (currentPath.includes('/account/register') && href.includes('Register')) {
+                        link.classList.add('active');
                     }
                 }
             });
@@ -669,75 +245,29 @@
                         profileDropdown.classList.remove('open');
                     }
                 });
-
-                // Fetch user data if not authenticated
-                @if (!User.Identity?.IsAuthenticated == true)
-                {
-                        <text>
-                        fetchUserProfile();
-                        </text>
-                }
             }
 
-            // Fetch user profile data
-            async function fetchUserProfile() {
-                try {
-                    const response = await fetch('/Account/GetCurrentUser');
-                    if (response.ok) {
-                        const user = await response.json();
-                        updateProfileUI(user);
-                    }
-                } catch (error) {
-                    console.error('Error fetching user profile:', error);
+            // Logout form submission
+            document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    this.submit();
                 }
-            }
+            });
 
-            // Update profile UI with user data
-            function updateProfileUI(user) {
-                const userName = document.getElementById('userName');
-                const userAvatar = document.getElementById('userAvatar');
-                const profileName = document.getElementById('profileName');
-                const profileEmail = document.getElementById('profileEmail');
-                const profileAvatarLarge = document.getElementById('profileAvatarLarge');
-                const profileRoles = document.getElementById('profileRoles');
-
-                if (userName && user.fullName) {
-                    userName.textContent = user.fullName.split(' ')[0];
+            // Hide dropdown on window resize (for mobile)
+            window.addEventListener('resize', function() {
+                if (profileDropdown) {
+                    profileDropdown.classList.remove('open');
                 }
-
-                if (userAvatar && user.fullName) {
-                    userAvatar.textContent = user.fullName[0].toUpperCase();
-                }
-
-                if (profileName && user.fullName) {
-                    profileName.textContent = user.fullName;
-                }
-
-                if (profileEmail && user.email) {
-                    profileEmail.textContent = user.email;
-                }
-
-                if (profileAvatarLarge && user.fullName) {
-                    profileAvatarLarge.textContent = user.fullName[0].toUpperCase();
-                }
-
-                if (profileRoles && user.roles) {
-                    profileRoles.innerHTML = '';
-                    user.roles.forEach(role => {
-                        const badge = document.createElement('span');
-                        badge.className = `user-role-badge role-${role.toLowerCase()}`;
-                        badge.textContent = role;
-                        profileRoles.appendChild(badge);
-                    });
-                }
-            }
+            });
         });
 
-        // Logout form submission
-        document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                this.submit();
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (e.key === 'Escape' && profileDropdown?.classList.contains('open')) {
+                profileDropdown.classList.remove('open');
             }
         });
     </script>

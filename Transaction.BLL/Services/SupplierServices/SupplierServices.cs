@@ -21,13 +21,13 @@ namespace Transaction.BLL
         public async Task<int> AddSupplier(SupplierCreateViewModel supplierCreate)
         {
 
-            var Supplier = _mapper.Map<Suppliers>(supplierCreate);
+            var Supplier = _mapper.Map<SystemUsers>(supplierCreate);
             if (Supplier is null)
                 throw new ArgumentNullException(nameof(Supplier));
             await _db.AddSupplier(Supplier);
-            return Supplier.SupplierId;
+            return int.Parse(Supplier.Id);
         }
-        public async Task<bool> DeleteSupplier(int id)
+        public async Task<bool> DeleteSupplier(string id)
         {
             var supplier = await _db.GetSupplierId(id);
             if (supplier is null)
@@ -42,7 +42,7 @@ namespace Transaction.BLL
             return await IsDuplicted;
         }
 
-        public async Task<SupplierReadViewModel?> GetSupplierId(int id)
+        public async Task<SupplierReadViewModel?> GetSupplierId(string id)
         {
             var supplier = await _db.GetSupplierId(id);
             if (supplier is null)
@@ -50,7 +50,7 @@ namespace Transaction.BLL
             return _mapper.Map<SupplierReadViewModel>(supplier);
         }
 
-        public async Task<SupplierReadViewModel?> GetSupplierIdWithDetails(int id)
+        public async Task<SupplierReadViewModel?> GetSupplierIdWithDetails(string id)
         {
             var supplier = await _db.GetSupplierIdWithDetails(id);
             if (supplier is null)

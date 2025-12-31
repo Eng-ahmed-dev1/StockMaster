@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Transaction.DAL; 
+using System.ComponentModel.DataAnnotations.Schema;
+using Transaction.DAL;
 
 namespace TransactionsTask.Models
 {
@@ -8,15 +9,21 @@ namespace TransactionsTask.Models
         [Key]
         public int TransactionId { get; set; }
 
-        [Required] 
+        [Required]
         public string CreatedByUserId { get; set; }
-        public SystemUsers CreatedBy { get; set; } 
+
+        [ForeignKey(nameof(CreatedByUserId))]
+        [InverseProperty(nameof(SystemUsers.CreatedTransactions))]
+        public SystemUsers CreatedBy { get; set; }
 
         public int? ProductId { get; set; }
         public Products Product { get; set; }
 
-        public int? SupplierId { get; set; }
-        public Suppliers Supplier { get; set; }
+        public string? SupplierId { get; set; }
+
+        [ForeignKey(nameof(SupplierId))]
+        [InverseProperty(nameof(SystemUsers.SuppliedTransactions))]
+        public SystemUsers Supplier { get; set; }
 
         [Required]
         public int Quantity { get; set; }
@@ -29,7 +36,7 @@ namespace TransactionsTask.Models
 
     public enum TransactionType
     {
-        Inbound,  
-        Outbound  
+        Inbound,
+        Outbound
     }
 }
