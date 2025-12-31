@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Transaction.BLL;
 
-namespace Transaction.PL.Controllers
+namespace TransactionsTask.Controllers
 {
     public class AccountController : Controller
     {

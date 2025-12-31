@@ -204,8 +204,8 @@ namespace TransactionsTask.Controllers
             ViewBag.Suppliers = new SelectList((await _supServices.GetSuppliers())
               .Select(sup => new
               {
-                  Id = sup.SupplierId,
-                  Text = sup.SupplierName
+                  Id = sup.Id,
+                  Text = sup.UserName
               }), "Id", "Text");
 
             ViewBag.Products = new SelectList((await _proService.GetAllProducts())

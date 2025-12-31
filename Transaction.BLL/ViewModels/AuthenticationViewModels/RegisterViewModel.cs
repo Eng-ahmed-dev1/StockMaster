@@ -30,13 +30,29 @@ namespace Transaction.BLL
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match")]
         public string ConfirmPassword { get; set; }
+        [StringLength(11)]
+        [Required(ErrorMessage = "Phone number is required")]
+        [Phone(ErrorMessage = "Invalid phone number format")]
+        public string PhoneNumber { get; set; }
 
-        [Phone(ErrorMessage = "Invalid phone number")]
-        [StringLength(20)]
-        public string? PhoneNumber { get; set; }
-        public Gender? Gender { get; set; }
+        [Required(ErrorMessage = "Address is required")]
+        [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters")]
+        public string Address { get; set; }
 
+        [Required(ErrorMessage = "City is required")]
+        [StringLength(100, ErrorMessage = "City cannot exceed 100 characters")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "Country is required")]
+        [StringLength(100, ErrorMessage = "Country cannot exceed 100 characters")]
+        public string Country { get; set; }
+
+        [Required(ErrorMessage = "Gender is required")]
+        public Gender Gender { get; set; }
+
+        [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
-        public DateTime? DateOfBirth { get; set; }
+        [Display(Name = "Date of Birth")]
+        public DateTime DateOfBirth { get; set; }
     }
 }

@@ -8,12 +8,14 @@ namespace Transaction.BLL
 {
     public interface ISupplierServices
     {
-        Task<SupplierReadViewModel?> GetSupplierId(string id);
-        Task<SupplierReadViewModel?> GetSupplierIdWithDetails(string id);
-        Task<IEnumerable<SupplierReadViewModel>> GetSuppliers();
+        Task<UserViewModel?> GetSupplierId(string id);
+        Task<UserViewModel?> GetSupplierIdWithDetails(string id);
+        Task<IEnumerable<UserViewModel>> GetSuppliers();
+
+
         Task<bool> DeleteSupplier(string id);
-        Task<bool> UpdateSupplier(SupplierEditViewModel supplierEdit);
-        Task<int> AddSupplier(SupplierCreateViewModel supplierCreate);
+        Task<bool> UpdateSupplier(EditUser supplierEdit);
+        Task<int> AddSupplier(RegisterViewModel supplierCreate);
         Task<bool> FindDuplicateEmail(string Email);
     }
 }

@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TransactionsTask.Models; // 👈 عشان Transactions
+using TransactionsTask.Models;
 
 namespace Transaction.DAL
 {
     public class SystemUsers : IdentityUser
     {
+
         [MaxLength(200)]
         public string? FullName { get; set; }
 

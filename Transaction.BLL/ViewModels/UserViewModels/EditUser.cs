@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace Transaction.BLL
 {
-    public class SupplierEditViewModel
+    public class EditUser
     {
         public string SupplierId { get; set; }
         [MaxLength(100, ErrorMessage = "The Supplier must have a name")]
@@ -10,7 +10,6 @@ namespace Transaction.BLL
         public string SupplierEmail { get; set; }
         [DataType(DataType.PhoneNumber), MaxLength(20)]
         public string PhoneNumber { get; set; }
-
 
     }
 }

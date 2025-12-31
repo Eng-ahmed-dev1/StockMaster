@@ -18,7 +18,7 @@ namespace Transaction.BLL
             _db = repo;
             _mapper = mapper;
         }
-        public async Task<int> AddSupplier(SupplierCreateViewModel supplierCreate)
+        public async Task<int> AddSupplier(RegisterViewModel supplierCreate)
         {
 
             var Supplier = _mapper.Map<SystemUsers>(supplierCreate);
@@ -42,29 +42,29 @@ namespace Transaction.BLL
             return await IsDuplicted;
         }
 
-        public async Task<SupplierReadViewModel?> GetSupplierId(string id)
+        public async Task<UserViewModel?> GetSupplierId(string id)
         {
             var supplier = await _db.GetSupplierId(id);
             if (supplier is null)
                 throw new ArgumentNullException(nameof(supplier));
-            return _mapper.Map<SupplierReadViewModel>(supplier);
+            return _mapper.Map<UserViewModel>(supplier);
         }
 
-        public async Task<SupplierReadViewModel?> GetSupplierIdWithDetails(string id)
+        public async Task<UserViewModel?> GetSupplierIdWithDetails(string id)
         {
             var supplier = await _db.GetSupplierIdWithDetails(id);
             if (supplier is null)
                 throw new ArgumentNullException(nameof(supplier));
-            return _mapper.Map<SupplierReadViewModel>(supplier);
+            return _mapper.Map<UserViewModel>(supplier);
         }
 
-        public async Task<IEnumerable<SupplierReadViewModel>> GetSuppliers()
+        public async Task<IEnumerable<UserViewModel>> GetSuppliers()
         {
             var suppliers = await _db.GetSuppliers();
-            return _mapper.Map<IEnumerable<SupplierReadViewModel>>(suppliers);
+            return _mapper.Map<IEnumerable<UserViewModel>>(suppliers);
         }
 
-        public async Task<bool> UpdateSupplier(SupplierEditViewModel supplierEdit)
+        public async Task<bool> UpdateSupplier(EditUser supplierEdit)
         {
             var supplier = await _db.GetSupplierId(supplierEdit.SupplierId);
             if (supplier is null)

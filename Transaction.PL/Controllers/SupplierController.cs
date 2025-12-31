@@ -1,32 +1,43 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using Transaction.BLL;
-using TransactionsTask.Repos.SupplierRepo;
+using AutoMapper;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TransactionsTask.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class SupplierController : Controller
+    [Authorize]
+    public class SuppliersController : Controller
     {
-        private readonly ISupplierServices _db;
+        private readonly ISupplierServices _supplierServices;
         private readonly IMapper _mapper;
+        private readonly IAccountServices account;
 
-        public SupplierController(ISupplierServices db, IMapper mapper)
+        public SuppliersController(ISupplierServices supplierServices, IMapper mapper , IAccountServices services)
         {
-            _db = db;
+            _supplierServices = supplierServices;
             _mapper = mapper;
+            account = services;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ShowSuppliers()
+        public async Task<IActionResult> ShowAllSuppliers()
         {
-            var suppliers = await _db.GetSuppliers();
+            var suppliers = await _supplierServices.GetSuppliers();
             return View(suppliers);
         }
 
-        [HttpGet]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var supplier = await _supplierServices.GetSupplierIdWithDetails(id);
+            if (supplier == null)
+                return NotFound();
+
+            return View(supplier);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -34,92 +45,105 @@ namespace TransactionsTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SupplierCreateViewModel suppliersCreate)
+        public async Task<IActionResult> Create(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(suppliersCreate);
+                return View(model);
 
-            if (await _db.FindDuplicateEmail(suppliersCreate.SupplierEmail))
+            if (await _supplierServices.FindDuplicateEmail(model.Email))
             {
-                ModelState.AddModelError("SupplierEmail", "This email already exists");
-                return View(suppliersCreate);
+                ModelState.AddModelError("Email", "This email is already registered.");
+                return View(model);
+            }
+            if (await account.IsUserNameExistsAsync(model.UserName))
+            {
+                ModelState.AddModelError("Username", "This UserName is already registered.");
+                return View(model);
             }
 
-            await _db.AddSupplier(suppliersCreate);
-            TempData["Success"] = "Supplier created successfully!";
-            return RedirectToAction(nameof(ShowSuppliers));
+            try
+            {
+                await account.RegisterAsync(model);
+                TempData["SuccessMessage"] = "Supplier created successfully!";
+                return RedirectToAction(nameof(ShowAllSuppliers));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error creating supplier: {ex.Message}");
+                return View(model);
+            }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var sup = await _db.GetSupplierId(id);
-            if (sup == null)
+            if (string.IsNullOrEmpty(id))
                 return NotFound();
 
-            var newSup = _mapper.Map<SupplierEditViewModel>(sup);
-            return View(newSup);
+            var supplier = await _supplierServices.GetSupplierId(id);
+            if (supplier == null)
+                return NotFound();
+
+            var editModel = _mapper.Map<EditUser>(supplier);
+
+            return View(editModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, SupplierEditViewModel suppliersEdit)
+        public async Task<IActionResult> Edit(string id, EditUser model)
         {
-            if (id != suppliersEdit.SupplierId)
-                return BadRequest();
-
-            if (!ModelState.IsValid)
-                return View(suppliersEdit);
-
-            var sup = await _db.GetSupplierId(id);
-            if (sup == null)
+            if (id != model.SupplierId)
                 return NotFound();
 
-            if (sup.SupplierEmail != suppliersEdit.SupplierEmail)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            try
             {
-                if (await _db.FindDuplicateEmail(suppliersEdit.SupplierEmail))
-                {
-                    ModelState.AddModelError("SupplierEmail", "This email already exists");
-                    return View(suppliersEdit);
-                }
+                var result = await _supplierServices.UpdateSupplier(model);
+                if (!result)
+                    return NotFound();
+
+                TempData["SuccessMessage"] = "Supplier updated successfully!";
+                return RedirectToAction(nameof(ShowAllSuppliers));
             }
-
-            await _db.UpdateSupplier(suppliersEdit);
-            TempData["Success"] = "Supplier updated successfully!";
-            return RedirectToAction(nameof(ShowSuppliers));
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error updating supplier: {ex.Message}");
+                return View(model);
+            }
         }
-
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            var sup = await _db.GetSupplierId(id);
-            if (sup == null)
+            if (string.IsNullOrEmpty(id))
                 return NotFound();
 
-            return View(sup);
+            var supplier = await _supplierServices.GetSupplierId(id);
+            if (supplier == null)
+                return NotFound();
+
+            return View(supplier);
         }
 
-        [HttpPost, ActionName(nameof(Delete))]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var sup = await _db.GetSupplierId(id);
-            if (sup == null)
-                return NotFound();
+            try
+            {
+                var result = await _supplierServices.DeleteSupplier(id);
+                if (!result)
+                    return NotFound();
 
-            await _db.DeleteSupplier(id);
-            TempData["Success"] = "Supplier deleted successfully!";
-            return RedirectToAction(nameof(ShowSuppliers));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(string id)
-        {
-            var sup = await _db.GetSupplierIdWithDetails(id);
-            if (sup == null)
-                return NotFound();
-
-            return View(sup);
+                TempData["SuccessMessage"] = "Supplier deleted successfully!";
+                return RedirectToAction(nameof(ShowAllSuppliers));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error deleting supplier: {ex.Message}";
+                return RedirectToAction(nameof(ShowAllSuppliers));
+            }
         }
     }
 }

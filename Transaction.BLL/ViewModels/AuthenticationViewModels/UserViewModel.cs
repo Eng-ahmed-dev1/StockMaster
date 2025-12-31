@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Transaction.DAL;
+using TransactionsTask.Models;
 namespace Transaction.BLL
 {
     // This ViewModle to show the user data after the login in profile or any someting like that 
@@ -18,5 +19,7 @@ namespace Transaction.BLL
         public bool IsActive { get; set; }
         public Gender? Gender { get; set; }
         public ICollection<string> Roles { get; set; } = new HashSet<string>();
+        public ICollection<Transactions> Transactions { get; set; } = new HashSet<Transactions>();
+
     }
 }

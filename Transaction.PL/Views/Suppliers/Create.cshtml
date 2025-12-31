@@ -1,0 +1,231 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Create Supplier";
+}
+
+<link rel="stylesheet" href="~/css/SupplierCreate.css" />
+
+<div class="create-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>Create New Supplier</h1>
+            <p>Add a new supplier to your network</p>
+        </div>
+
+        <div class="form-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label">Username</label>
+                        <input asp-for="UserName" class="form-control" placeholder="Enter username" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FullName" class="control-label">Full Name</label>
+                        <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" type="email" placeholder="supplier@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="+20 123 456 7890" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label">Password</label>
+                        <div class="password-wrapper">
+                            <input asp-for="Password" class="form-control" type="password" id="passwordField" placeholder="Enter password" />
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <span class="strength-text" id="strengthText"></span>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPasswordField" placeholder="Re-enter password" />
+                            <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label">Address</label>
+                        <input asp-for="Address" class="form-control" placeholder="Enter address" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">City</label>
+                        <input asp-for="City" class="form-control" placeholder="Enter city" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Country" class="control-label">Country</label>
+                        <input asp-for="Country" class="form-control" placeholder="Enter country" />
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DateOfBirth" class="control-label">Date of Birth</label>
+                        <input asp-for="DateOfBirth" class="form-control" type="date" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Gender" class="control-label">Gender</label>
+                    <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()">
+                        <option value="">Select Gender</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        Create Supplier
+                    </button>
+                </div>
+            </form>
+
+            <div class="back-link">
+                <a asp-action="ShowAllSuppliers">
+                    ← Back to Suppliers List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Toggle Password Visibility
+        function togglePasswordVisibility(toggleBtn, passwordField) {
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+
+                // Toggle eye icon
+                const eyeIcon = this.querySelector('.eye-icon');
+                if (type === 'text') {
+                    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+                } else {
+                    eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+                }
+            });
+        }
+
+        // Password Strength Checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthText = document.getElementById('strengthText');
+            const strengthFill = document.getElementById('strengthFill');
+
+            if (password.length === 0) {
+                strengthText.textContent = '';
+                strengthFill.style.width = '0%';
+                strengthFill.className = 'strength-fill';
+                return;
+            }
+
+            // Length check
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+
+            // Contains lowercase
+            if (/[a-z]/.test(password)) strength += 1;
+
+            // Contains uppercase
+            if (/[A-Z]/.test(password)) strength += 1;
+
+            // Contains numbers
+            if (/[0-9]/.test(password)) strength += 1;
+
+            // Contains special characters
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+            // Update UI based on strength
+            let strengthLevel = '';
+            let strengthClass = '';
+            let widthPercent = 0;
+
+            if (strength <= 2) {
+                strengthLevel = 'Weak';
+                strengthClass = 'weak';
+                widthPercent = 25;
+            } else if (strength <= 4) {
+                strengthLevel = 'Good';
+                strengthClass = 'good';
+                widthPercent = 50;
+            } else if (strength <= 5) {
+                strengthLevel = 'Strong';
+                strengthClass = 'strong';
+                widthPercent = 75;
+            } else {
+                strengthLevel = 'Impossible';
+                strengthClass = 'impossible';
+                widthPercent = 100;
+            }
+
+            strengthText.textContent = strengthLevel;
+            strengthFill.style.width = widthPercent + '%';
+            strengthFill.className = 'strength-fill ' + strengthClass;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('passwordField');
+            const confirmPasswordField = document.getElementById('confirmPasswordField');
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+            // Setup toggle buttons
+            togglePasswordVisibility(togglePassword, passwordField);
+            togglePasswordVisibility(toggleConfirmPassword, confirmPasswordField);
+
+            // Setup password strength checker
+            passwordField.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+        });
+    </script>
+}

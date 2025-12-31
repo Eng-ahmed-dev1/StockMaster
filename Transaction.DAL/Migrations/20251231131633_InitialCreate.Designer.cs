@@ -12,8 +12,8 @@ using TransactionsTask.Data;
 namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    [Migration("20251231103849_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20251231131633_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
