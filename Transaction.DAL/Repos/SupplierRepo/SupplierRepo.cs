@@ -32,7 +32,6 @@ namespace TransactionsTask.Repos.SupplierRepo
         public async Task<SystemUsers?> GetSupplierId(string id)
         {
             return await db.Users
-            .AsNoTracking()
             .FirstOrDefaultAsync(sup => sup.Id == id);
         }
 
@@ -40,7 +39,7 @@ namespace TransactionsTask.Repos.SupplierRepo
         {
             return await db.Users
                 .Include(x => x.SuppliedTransactions)
-                    .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

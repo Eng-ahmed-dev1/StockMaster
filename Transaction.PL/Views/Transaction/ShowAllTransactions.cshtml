@@ -20,7 +20,7 @@
 <div class="stats-cards">
     <div class="stat-card">
         <div class="stat-icon blue">
-            <i class="fas fa-arrow-down"></i> <!-- أيقونة للـ Inbound -->
+            <i class="fas fa-arrow-down"></i>
         </div>
         <div class="stat-info">
             <h4 id="inboundCount">0</h4>
@@ -29,7 +29,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-icon red">
-            <i class="fas fa-arrow-up"></i> <!-- أيقونة للـ Outbound -->
+            <i class="fas fa-arrow-up"></i>
         </div>
         <div class="stat-info">
             <h4 id="outboundCount">0</h4>
@@ -52,23 +52,60 @@
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="Search transactions...">
     </div>
-    <a asp-action="Create" class="btn-create">
-        <i class="fas fa-plus-circle"></i>
-        Create New Transaction
-    </a>
+    <div class="action-buttons-group">
+        <a asp-action="Create" class="btn-create">
+            <i class="fas fa-plus-circle"></i>
+            Create New
+        </a>
+        <div class="export-dropdown">
+            <button class="btn-export" id="exportDropdownBtn">
+                <i class="fas fa-file-export"></i>
+                Export
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="export-dropdown-menu" id="exportDropdownMenu">
+                <a href="@Url.Action("ExportAll")" class="export-option">
+                    <i class="fas fa-download"></i>
+                    Export All
+                </a>
+                <button type="button" class="export-option" id="exportSelectedBtn">
+                    <i class="fas fa-check-square"></i>
+                    Export Selected
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Selection Controls -->
+@if (Model.Any())
+{
+    <div class="selection-controls" id="selectionControls" style="display: none;">
+        <div class="selection-info">
+            <i class="fas fa-check-square"></i>
+            <span id="selectedCount">0</span> transaction(s) selected
+        </div>
+        <div class="selection-actions">
+            <button type="button" class="btn-select-action" id="selectAllBtn" title="Select all visible transactions">
+                <i class="fas fa-check-double"></i>
+                Select All Visible
+            </button>
+            <button type="button" class="btn-select-action" id="deselectAllBtn" title="Deselect all transactions">
+                <i class="fas fa-times"></i>
+                Clear Selection
+            </button>
+        </div>
+    </div>
+}
 <div class="table-container">
     @if (Model.Any())
     {
         <table class="custom-table" id="transactionsTable">
             <thead>
                 <tr>
-                    <!-- إضافة عمود Created By للـ Admin فقط -->
-                    @if (isAdmin)
-                    {
-                        <th><i class="fas fa-user"></i> Created By</th>
-                    }
+                    <th class="checkbox-column">
+                        <input type="checkbox" id="masterCheckbox" class="master-checkbox">
+                    </th>
                     <th><i class="fas fa-box"></i> Product</th>
                     <th><i class="fas fa-user-tie"></i> Supplier</th>
                     <th><i class="fas fa-sort-numeric-up"></i> Quantity</th>
@@ -80,7 +117,10 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr data-transaction-id="@item.TransactionId">
+                        <td class="checkbox-column">
+                            <input type="checkbox" class="transaction-checkbox" value="@item.TransactionId">
+                        </td>
                         <td>
                             <div class="product-name">
                                 <i class="fas fa-cube"></i>
@@ -107,14 +147,16 @@
                             </span>
                         </td>
                         <td>
-                            <i class="fas fa-calendar"></i>
-                            @item.TransactionDate.ToString("MMM dd, yyyy")
+                            <div class="date-cell">
+                                <i class="fas fa-calendar"></i>
+                                <span>@item.TransactionDate.ToString("MMM dd, yyyy")</span>
+                            </div>
                         </td>
                         <td>
                             @{
                                 var transactionType = item.TransactionType.ToString().ToLower();
                                 var badgeClass = transactionType == "inbound" ? "badge-inbound" : "badge-outbound";
-                                var badgeText = transactionType == "inbound" ? "IN" : "OUT";
+                                var badgeText = transactionType == "inbound" ? "INBOUND" : "OUTBOUND";
                             }
                             <span class="badge-transaction @badgeClass">
                                 @badgeText
@@ -122,14 +164,17 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a asp-action="Edit" asp-route-id="@item.TransactionId" class="btn-action btn-edit">
-                                    <i class="fas fa-edit"></i> Edit
+                                <a asp-action="ExportSingle" asp-route-id="@item.TransactionId" class="btn-action btn-export-single" title="Export">
+                                    <i class="fas fa-file-download"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.TransactionId" class="btn-action btn-details">
-                                    <i class="fas fa-info-circle"></i> Details
+                                <a asp-action="Edit" asp-route-id="@item.TransactionId" class="btn-action btn-edit" title="Edit">
+                                    <i class="fas fa-edit"></i>
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.TransactionId" class="btn-action btn-delete">
-                                    <i class="fas fa-trash-alt"></i> Delete
+                                <a asp-action="Details" asp-route-id="@item.TransactionId" class="btn-action btn-details" title="Details">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.TransactionId" class="btn-action btn-delete" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
                                 </a>
                             </div>
                         </td>
@@ -160,11 +205,20 @@
         document.getElementById('searchInput')?.addEventListener('keyup', function() {
             const searchValue = this.value.toLowerCase();
             const tableRows = document.querySelectorAll('#transactionsTable tbody tr');
+            const visibleCheckboxes = [];
 
             tableRows.forEach(row => {
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchValue) ? '' : 'none';
+                if (text.includes(searchValue)) {
+                    row.style.display = '';
+                    const checkbox = row.querySelector('.transaction-checkbox');
+                    if (checkbox) visibleCheckboxes.push(checkbox);
+                } else {
+                    row.style.display = 'none';
+                }
             });
+
+            updateMasterCheckbox(visibleCheckboxes);
         });
 
         // Calculate statistics
@@ -175,9 +229,9 @@
 
             rows.forEach(row => {
                 const typeCell = row.querySelector('.badge-transaction');
-                if (typeCell && typeCell.textContent.includes('IN')) {
+                if (typeCell && typeCell.classList.contains('badge-inbound')) {
                     inboundCount++;
-                } else if (typeCell && typeCell.textContent.includes('OUT')) {
+                } else if (typeCell && typeCell.classList.contains('badge-outbound')) {
                     outboundCount++;
                 }
             });
@@ -189,6 +243,201 @@
             if (document.getElementById('outboundCount')) {
                 document.getElementById('outboundCount').textContent = outboundCount;
             }
+
+            initializeCheckboxes();
         });
+
+        // Export dropdown functionality
+        const exportDropdownBtn = document.getElementById('exportDropdownBtn');
+        const exportDropdownMenu = document.getElementById('exportDropdownMenu');
+
+        if (exportDropdownBtn && exportDropdownMenu) {
+            exportDropdownBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                exportDropdownMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!exportDropdownBtn.contains(e.target) && !exportDropdownMenu.contains(e.target)) {
+                    exportDropdownMenu.classList.remove('show');
+                }
+            });
+        }
+
+        // Initialize checkboxes
+        function initializeCheckboxes() {
+            const masterCheckbox = document.getElementById('masterCheckbox');
+            const transactionCheckboxes = document.querySelectorAll('.transaction-checkbox');
+            const selectedCountEl = document.getElementById('selectedCount');
+            const selectionControls = document.getElementById('selectionControls');
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            const deselectAllBtn = document.getElementById('deselectAllBtn');
+            const exportSelectedBtn = document.getElementById('exportSelectedBtn');
+
+            function getVisibleCheckboxes() {
+                return Array.from(document.querySelectorAll('.transaction-checkbox'))
+                    .filter(checkbox => {
+                        const row = checkbox.closest('tr');
+                        return row && row.style.display !== 'none';
+                    });
+            }
+
+            function updateSelectedCount() {
+                const checkedBoxes = document.querySelectorAll('.transaction-checkbox:checked');
+                const count = checkedBoxes.length;
+
+                if (selectedCountEl) {
+                    selectedCountEl.textContent = count;
+                }
+
+                if (selectionControls) {
+                    selectionControls.style.display = count > 0 ? 'flex' : 'none';
+                }
+
+                updateMasterCheckboxState();
+            }
+
+            function updateMasterCheckboxState() {
+                if (!masterCheckbox) return;
+
+                const visibleCheckboxes = getVisibleCheckboxes();
+                const checkedVisibleBoxes = visibleCheckboxes.filter(cb => cb.checked);
+
+                if (visibleCheckboxes.length === 0) {
+                    masterCheckbox.checked = false;
+                    masterCheckbox.indeterminate = false;
+                    masterCheckbox.disabled = true;
+                } else {
+                    masterCheckbox.disabled = false;
+                    if (checkedVisibleBoxes.length === 0) {
+                        masterCheckbox.checked = false;
+                        masterCheckbox.indeterminate = false;
+                    } else if (checkedVisibleBoxes.length === visibleCheckboxes.length) {
+                        masterCheckbox.checked = true;
+                        masterCheckbox.indeterminate = false;
+                    } else {
+                        masterCheckbox.checked = false;
+                        masterCheckbox.indeterminate = true;
+                    }
+                }
+            }
+
+            function updateMasterCheckbox(checkboxesArray) {
+                if (!masterCheckbox) return;
+
+                if (checkboxesArray.length === 0) {
+                    masterCheckbox.disabled = true;
+                } else {
+                    masterCheckbox.disabled = false;
+                    const allChecked = checkboxesArray.every(cb => cb.checked);
+                    const anyChecked = checkboxesArray.some(cb => cb.checked);
+
+                    if (allChecked) {
+                        masterCheckbox.checked = true;
+                        masterCheckbox.indeterminate = false;
+                    } else if (anyChecked) {
+                        masterCheckbox.checked = false;
+                        masterCheckbox.indeterminate = true;
+                    } else {
+                        masterCheckbox.checked = false;
+                        masterCheckbox.indeterminate = false;
+                    }
+                }
+            }
+
+            if (masterCheckbox) {
+                masterCheckbox.addEventListener('change', function() {
+                    const visibleCheckboxes = getVisibleCheckboxes();
+                    visibleCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            transactionCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedCount();
+                });
+            });
+
+            if (selectAllBtn) {
+                selectAllBtn.addEventListener('click', function() {
+                    const visibleCheckboxes = getVisibleCheckboxes();
+                    visibleCheckboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            if (deselectAllBtn) {
+                deselectAllBtn.addEventListener('click', function() {
+                    transactionCheckboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            if (exportSelectedBtn) {
+                exportSelectedBtn.addEventListener('click', async function() {
+                    const checkedBoxes = document.querySelectorAll('.transaction-checkbox:checked');
+
+                    if (checkedBoxes.length === 0) {
+                        alert('⚠️ Please select at least one transaction to export');
+                        return;
+                    }
+
+                    const selectedIds = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+                    try {
+                        const response = await fetch('@Url.Action("ExportSelected")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                            },
+                            body: JSON.stringify(selectedIds)
+                        });
+
+                        if (response.ok) {
+                            const blob = await response.blob();
+
+                            const url = window.URL.createObjectURL(blob);
+
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+
+                            const fileName = `Transactions_Selected_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`;
+                            a.download = fileName;
+
+                            document.body.appendChild(a);
+                            a.click();
+
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+
+                            // إغلاق القائمة المنسدلة
+                            if (exportDropdownMenu) {
+                                exportDropdownMenu.classList.remove('show');
+                            }
+
+                            // رسالة نجاح
+                            console.log('✅ PDF exported successfully');
+                        } else {
+                            const error = await response.json();
+                            alert('❌ ' + (error.message || 'Export failed'));
+                        }
+                    } catch (error) {
+                        console.error('Export error:', error);
+                        alert('❌ An error occurred while exporting. Please try again.');
+                    }
+                });
+            }
+
+            updateMasterCheckboxState();
+        }
     </script>
 }

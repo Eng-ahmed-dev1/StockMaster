@@ -38,6 +38,10 @@ namespace TransactionsTask.Data
             modelBuilder.Entity<Transactions>()
                 .Property(t => t.TransactionType)
                 .HasConversion<string>();
+            //CountryType enum as string 
+            modelBuilder.Entity<SystemUsers>()
+                .Property(x=>x.Country)
+                .HasConversion<string>();
 
             // Optional: Indexes for performance
             modelBuilder.Entity<Transactions>()

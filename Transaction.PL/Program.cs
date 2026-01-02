@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging; // <-- Add this using directive
 using Transaction.BLL;
 using TransactionsTask.Data;
 using TransactionsTask.Repos.ProductRepo;
@@ -9,6 +8,7 @@ using TransactionsTask.Repos.TransactionRepo;
 using AutoMapper;
 using Transaction.DAL;
 using Microsoft.AspNetCore.Identity;
+using NuGet.Packaging;
 
 namespace TransactionsTask
 {
@@ -61,6 +61,8 @@ namespace TransactionsTask
                 options.ExpireTimeSpan = TimeSpan.FromDays(7); 
                 options.SlidingExpiration = true;
             });
+            // PDF Services
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             // Repositories (DAL)
             builder.Services.AddScoped<IProductRepo, ProductRepo>();

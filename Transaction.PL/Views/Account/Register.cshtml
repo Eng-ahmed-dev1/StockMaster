@@ -1,9 +1,11 @@
 ﻿@model Transaction.BLL.RegisterViewModel
+
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Authentication.cshtml";
 }
-<style >
+
+<style>
     .register-container {
         position: relative;
         z-index: 10;
@@ -493,25 +495,11 @@
         .form-label {
             font-size: 0.85rem;
         }
-    }
-
-</style>
+    }</style>
 
 <div class="register-container">
     <div class="row justify-content-center">
         <div class="col-12">
-            <!-- Success Alert -->
-            @if (TempData["Success"] is not null)
-            {
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle me-3 fs-5"></i>
-                        <div>@TempData["Success"]</div>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            }
-
             <div class="card">
                 <!-- Card Header -->
                 <div class="card-header text-center">
@@ -543,7 +531,7 @@
                         <div class="row">
                             <!-- Full Name -->
                             <div class="col-md-12 mb-3">
-                                <label asp-for="FullName" class="form-label">Full Name</label>
+                                <label asp-for="FullName" class="form-label">Full Name <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-user"></i>
@@ -559,7 +547,7 @@
 
                             <!-- Email -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label">Email Address</label>
+                                <label asp-for="Email" class="form-label">Email Address <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-envelope"></i>
@@ -575,7 +563,7 @@
 
                             <!-- Username -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="UserName" class="form-label">Username</label>
+                                <label asp-for="UserName" class="form-label">Username <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-at"></i>
@@ -590,7 +578,7 @@
 
                             <!-- Password -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Password" class="form-label">Password</label>
+                                <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-lock"></i>
@@ -618,7 +606,7 @@
 
                             <!-- Confirm Password -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-lock"></i>
@@ -634,34 +622,84 @@
 
                             <!-- Phone Number -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                                <label asp-for="PhoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-phone"></i>
                                     </span>
                                     <input asp-for="PhoneNumber"
                                            class="form-control"
-                                           placeholder="+1 234 567 8900">
+                                           placeholder="+1 234 567 8900"
+                                           required>
                                 </div>
                                 <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                             </div>
 
                             <!-- Gender -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Gender" class="form-label">Gender</label>
-                                <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()">
+                                <label asp-for="Gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                                <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()" required>
                                     <option value="">Select Gender</option>
                                 </select>
                                 <span asp-validation-for="Gender" class="text-danger small"></span>
                             </div>
 
                             <!-- Date of Birth -->
-                            <div class="col-12 mb-4">
-                                <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="DateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
                                 <input asp-for="DateOfBirth"
                                        class="form-control"
-                                       type="date">
+                                       type="date"
+                                       required>
                                 <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="Address" class="form-label">Address <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    <input asp-for="Address"
+                                           class="form-control"
+                                           placeholder="Enter your address"
+                                           required>
+                                </div>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+
+                            <!-- City -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="City" class="form-label">City <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-city"></i>
+                                    </span>
+                                    <input asp-for="City"
+                                           class="form-control"
+                                           placeholder="Enter your city"
+                                           required>
+                                </div>
+                                <span asp-validation-for="City" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Country -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Country" class="form-label">Country <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-globe"></i>
+                                    </span>
+                                    <select asp-for="Country"
+                                           class="form-control"                        s
+                                           placeholder="Enter your country"
+                                           asp-items="Html.GetEnumSelectList<CountryType>()"
+                                           required>
+                                       <option value="">--Select yout country</option>    
+                                       </select>
+                                </div>
+                                <span asp-validation-for="Country" class="text-danger small"></span>
                             </div>
                         </div>
 
@@ -694,6 +732,7 @@
     </div>
 </div>
 
+<!-- نفس الـ JavaScript الموجود -->
 <script>
     // Toggle password visibility
     document.querySelector('.toggle-password')?.addEventListener('click', function() {
@@ -721,13 +760,11 @@
         let color = '';
         let text = '';
 
-        // Check password criteria
         if (password.length >= 8) strength++;
         if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
         if (password.match(/[0-9]/)) strength++;
         if (password.match(/[^a-zA-Z0-9]/)) strength++;
 
-        // Determine strength level
         if (password.length === 0) {
             width = 0;
             text = 'Password strength';
@@ -750,7 +787,6 @@
             color = '#28a745';
         }
 
-        // Update UI
         strengthBar.style.width = width + '%';
         strengthBar.style.backgroundColor = color;
         strengthText.textContent = text;

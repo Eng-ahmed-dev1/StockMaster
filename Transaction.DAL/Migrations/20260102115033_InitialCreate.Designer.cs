@@ -12,8 +12,8 @@ using TransactionsTask.Data;
 namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    [Migration("20260102092348_InitialCreat")]
-    partial class InitialCreat
+    [Migration("20260102115033_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,8 +179,7 @@ namespace Transaction.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

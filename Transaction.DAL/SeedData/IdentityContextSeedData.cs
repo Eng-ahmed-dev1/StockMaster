@@ -53,14 +53,14 @@ namespace Transaction.DAL
                 var admin = new SystemUsers
                 {
                     FullName = "Ahmed Alaa",
-                    UserName = "Own:Ahmed",
+                    UserName = "OwnAhmed",
                     Email = adminEmail,
                     PhoneNumber = "01226598971",
                     EmailConfirmed = true,
                     IsActive = true,
                     Gender = Gender.Male,
                     City = "Alexandria",
-                    Country ="Egypt",
+                    Country =CountryType.Egypt,
                     CreatedAt = DateTime.Now,
                     DateOfBirth = new DateTime(2000,11,30),
                 };

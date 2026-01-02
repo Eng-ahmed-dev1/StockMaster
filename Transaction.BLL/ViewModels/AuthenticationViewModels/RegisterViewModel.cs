@@ -44,8 +44,7 @@ namespace Transaction.BLL
         public string City { get; set; }
 
         [Required(ErrorMessage = "Country is required")]
-        [StringLength(100, ErrorMessage = "Country cannot exceed 100 characters")]
-        public string Country { get; set; }
+        public CountryType Country { get; set; }
 
         [Required(ErrorMessage = "Gender is required")]
         public Gender Gender { get; set; }
