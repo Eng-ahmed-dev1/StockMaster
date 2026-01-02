@@ -344,22 +344,22 @@ SystemUsers (1) ──→ (N) Transactions [SupplierId]
 
 ### Dashboard
 <div align="center">
-<img src="https://via.placeholder.com/800x500/ECF0F1/2C3E50?text=Dashboard+View" alt="Dashboard">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/Light-ModeTransactionDashBoard.png" alt="Dashboard">
 </div>
 
 ### Product Management
 <div align="center">
-<img src="https://via.placeholder.com/800x500/ECF0F1/2C3E50?text=Product+Management" alt="Products">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/Light-ModeProductDashBoard.png" alt="Products">
 </div>
 
-### Transaction List
+### Profile
 <div align="center">
-<img src="https://via.placeholder.com/800x500/ECF0F1/2C3E50?text=Transaction+List" alt="Transactions">
+<img src="" alt="Transactions">
 </div>
 
 ### PDF Export
 <div align="center">
-<img src="[[https://via.placeholder.com/800x500/ECF0F1/2C3E50?text=PDF+Report](https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/PDF.png)](https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/PDF.png)" alt="PDF Report">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/PDF.png" alt="PDF Report">
 </div>
 
 ---
