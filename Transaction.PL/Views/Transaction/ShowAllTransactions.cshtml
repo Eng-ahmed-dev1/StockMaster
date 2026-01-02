@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<TransactionReadProSupViewModels>
 @{
-    ViewData["Title"] = "All Transactions";
+    ViewData["Title"] = "Transactions";
+    var isAdmin = User.IsInRole("Admin");
+    var pageTitle = isAdmin ? "All Transactions" : "My Transactions";
 }
 
 <link rel="stylesheet" href="~/css/ShowAllTransaction.css" />
@@ -8,28 +10,30 @@
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-receipt"></i>
-        All Transactions
+        @pageTitle
     </h1>
-    <p class="page-subtitle">Manage and track all your business transactions</p>
+    <p class="page-subtitle">
+        @(isAdmin ? "Manage and track all business transactions" : "View and manage your transactions")
+    </p>
 </div>
 
 <div class="stats-cards">
     <div class="stat-card">
         <div class="stat-icon blue">
-            <i class="fas fa-shopping-cart"></i>
+            <i class="fas fa-arrow-down"></i> <!-- أيقونة للـ Inbound -->
         </div>
         <div class="stat-info">
-            <h4 id="purchaseCount">0</h4>
-            <p>Total Purchases</p>
+            <h4 id="inboundCount">0</h4>
+            <p>Total Inbound</p>
         </div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon green">
-            <i class="fas fa-coins"></i>
+        <div class="stat-icon red">
+            <i class="fas fa-arrow-up"></i> <!-- أيقونة للـ Outbound -->
         </div>
         <div class="stat-info">
-            <h4 id="saleCount">0</h4>
-            <p>Total Sales</p>
+            <h4 id="outboundCount">0</h4>
+            <p>Total Outbound</p>
         </div>
     </div>
     <div class="stat-card">
@@ -38,7 +42,7 @@
         </div>
         <div class="stat-info">
             <h4>@Model.Count()</h4>
-            <p>All Transactions</p>
+            <p>@(isAdmin ? "All Transactions" : "My Transactions")</p>
         </div>
     </div>
 </div>
@@ -60,6 +64,11 @@
         <table class="custom-table" id="transactionsTable">
             <thead>
                 <tr>
+                    <!-- إضافة عمود Created By للـ Admin فقط -->
+                    @if (isAdmin)
+                    {
+                        <th><i class="fas fa-user"></i> Created By</th>
+                    }
                     <th><i class="fas fa-box"></i> Product</th>
                     <th><i class="fas fa-user-tie"></i> Supplier</th>
                     <th><i class="fas fa-sort-numeric-up"></i> Quantity</th>
@@ -79,7 +88,7 @@
                             </div>
                         </td>
                         <td>
-                            @if (item.SupplierName is not null)
+                            @if (!string.IsNullOrEmpty(item.SupplierName))
                             {
                                 <span class="supplier-badge">
                                     <i class="fas fa-truck"></i> @item.SupplierName
@@ -93,7 +102,7 @@
                             }
                         </td>
                         <td>
-                            <span class="quantity-badge">
+                            <span class="quantity-badge @(item.TransactionType == TransactionType.Inbound ? "quantity-inbound" : "quantity-outbound")">
                                 @Html.DisplayFor(modelItem => item.Quantity)
                             </span>
                         </td>
@@ -104,11 +113,11 @@
                         <td>
                             @{
                                 var transactionType = item.TransactionType.ToString().ToLower();
-                                var badgeClass = transactionType == "purchase" ? "badge-purchase" :
-                                transactionType == "sale" ? "badge-sale" : "badge-return";
+                                var badgeClass = transactionType == "inbound" ? "badge-inbound" : "badge-outbound";
+                                var badgeText = transactionType == "inbound" ? "IN" : "OUT";
                             }
                             <span class="badge-transaction @badgeClass">
-                                @Html.DisplayFor(modelItem => item.TransactionType)
+                                @badgeText
                             </span>
                         </td>
                         <td>
@@ -134,7 +143,13 @@
         <div class="empty-state">
             <i class="fas fa-inbox"></i>
             <h3>No Transactions Found</h3>
-            <p>Start by creating your first transaction</p>
+            <p>
+                @(isAdmin ? "There are no transactions in the system yet." : "You haven't created any transactions yet.")
+            </p>
+            <a asp-action="Create" class="btn-create">
+                <i class="fas fa-plus-circle"></i>
+                Create Your First Transaction
+            </a>
         </div>
     }
 </div>
@@ -142,7 +157,7 @@
 @section Scripts {
     <script>
         // Search functionality
-        document.getElementById('searchInput').addEventListener('keyup', function() {
+        document.getElementById('searchInput')?.addEventListener('keyup', function() {
             const searchValue = this.value.toLowerCase();
             const tableRows = document.querySelectorAll('#transactionsTable tbody tr');
 
@@ -155,20 +170,25 @@
         // Calculate statistics
         document.addEventListener('DOMContentLoaded', function() {
             const rows = document.querySelectorAll('#transactionsTable tbody tr');
-            let purchaseCount = 0;
-            let saleCount = 0;
+            let inboundCount = 0;
+            let outboundCount = 0;
 
             rows.forEach(row => {
-                const typeCell = row.cells[4].textContent.toLowerCase().trim();
-                if (typeCell.includes('purchase')) {
-                    purchaseCount++;
-                } else if (typeCell.includes('sale')) {
-                    saleCount++;
+                const typeCell = row.querySelector('.badge-transaction');
+                if (typeCell && typeCell.textContent.includes('IN')) {
+                    inboundCount++;
+                } else if (typeCell && typeCell.textContent.includes('OUT')) {
+                    outboundCount++;
                 }
             });
 
-            document.getElementById('purchaseCount').textContent = purchaseCount;
-            document.getElementById('saleCount').textContent = saleCount;
+            if (document.getElementById('inboundCount')) {
+                document.getElementById('inboundCount').textContent = inboundCount;
+            }
+
+            if (document.getElementById('outboundCount')) {
+                document.getElementById('outboundCount').textContent = outboundCount;
+            }
         });
     </script>
 }

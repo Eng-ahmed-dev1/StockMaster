@@ -50,7 +50,7 @@ namespace Transaction.BLL
             return _mapper.Map<ProductReadViewModel>(product);
         }
 
-        public async Task<ProductReadViewModel>GetProductDetailsById(int id)
+        public async Task<ProductReadViewModel> GetProductDetailsById(int id)
         {
             var product = await _db.GetProductDetailsById(id);
             if (product is null)

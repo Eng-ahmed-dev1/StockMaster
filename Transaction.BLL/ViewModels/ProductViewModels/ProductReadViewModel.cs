@@ -12,7 +12,7 @@ namespace Transaction.BLL
         public string Description { get; set; }
         public decimal Price { get; set; }
         public int StockLevel { get; set; }
-        public IEnumerable<TransactionReadProSupViewModels> Transactions { get; set; }
+        public IEnumerable<TransactionReadProSupViewModels> Transactions { get; set; } = new HashSet<TransactionReadProSupViewModels>();
 
     }
 }

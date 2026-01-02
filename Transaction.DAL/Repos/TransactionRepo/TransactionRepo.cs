@@ -21,10 +21,23 @@ namespace TransactionsTask.Repos.TransactionRepo
             await db.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Transactions>> GetAllTransactions()
+        {
+            return await db.Transactions
+                .Include(t => t.Product)
+                .Include(t => t.Supplier)
+                .Include(t => t.CreatedBy)
+                .OrderByDescending(t => t.TransactionDate)
+                .AsNoTracking()
+                .ToListAsync();
+        }
         public async Task<Transactions?> GetTransactionById(int id)
         {
             return await db.Transactions
-                .FirstOrDefaultAsync(tran => tran.TransactionId == id);
+           .Include(t => t.Product)      
+           .Include(t => t.Supplier)       
+           .Include(t => t.CreatedBy)    
+           .FirstOrDefaultAsync(tran => tran.TransactionId == id);
         }
 
         public async Task<IEnumerable<Transactions>> GetTransactions()
@@ -32,13 +45,13 @@ namespace TransactionsTask.Repos.TransactionRepo
             return await db.Transactions.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<Transactions>> GetTransactionsByUserId(string userId)
+        public async Task<IEnumerable<Transactions>> GetTransactionsBySupplierId(string userId)
         {
             return await db.Transactions
            .Include(t => t.Product)
            .Include(t => t.Supplier)
            .Include(t => t.CreatedBy)
-           .Where(t => t.CreatedByUserId == userId) 
+           .Where(t => t.SupplierId == userId) 
            .OrderByDescending(t => t.TransactionDate) 
            .ToListAsync();
         }

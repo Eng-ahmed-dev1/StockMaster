@@ -33,6 +33,13 @@ namespace Transaction.BLL
             await _db.DeleteTransaction(transaction);
             return true;
         }
+
+        public async Task<IEnumerable<TransactionReadProSupViewModels>> GetAllTransactions()
+        {
+            var transactions = await _db.GetAllTransactions();
+            return _mapper.Map<IEnumerable<TransactionReadProSupViewModels>>(transactions);
+        }
+
         public async Task<TransactionReadProSupViewModels?> GetTransactionId(int id)
         {
             var transaction = await _db.GetTransactionById(id);
@@ -49,7 +56,7 @@ namespace Transaction.BLL
 
         public async Task<IEnumerable<TransactionReadProSupViewModels>> GetTransactionsByUserId(string userId)
         {
-            var transactions = await _db.GetTransactionsByUserId(userId);
+            var transactions = await _db.GetTransactionsBySupplierId(userId);
 
             if (transactions == null || !transactions.Any())
                 return Enumerable.Empty<TransactionReadProSupViewModels>();

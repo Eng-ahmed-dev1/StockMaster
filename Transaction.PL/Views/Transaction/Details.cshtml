@@ -1,11 +1,10 @@
 ﻿@model TransactionReadProSupViewModels
-
 @{
     ViewData["Title"] = "Transaction Details";
+    var isAdmin = User.IsInRole("Admin");
 }
 
 <link rel="stylesheet" href="~/css/TransactionDetails.css" />
-
 
 <div class="details-container">
     <div class="details-card">
@@ -26,26 +25,60 @@
 
             <div class="info-section">
                 <div class="info-grid">
+                    @if (isAdmin)
+                    {
+                        <div class="info-item">
+                            <dt>Created By</dt>
+                            <dd>@(Model?.CreatedByUserId ?? "N/A")</dd>
+                        </div>
+                    }
+
                     <div class="info-item">
                         <dt>@Html.DisplayNameFor(model => model.ProductName)</dt>
                         <dd>@Html.DisplayFor(model => model.ProductName)</dd>
                     </div>
+
                     <div class="info-item">
-                        <dt>@Html.DisplayNameFor(model => model.SupplierName)</dt>
-                        <dd>@(Model?.SupplierName is not null ? Model.SupplierName : "User")</dd>
+                        <dt>Supplier</dt>
+                        <dd>
+                            @if (!string.IsNullOrEmpty(Model?.SupplierName))
+                            {
+                                <span class="supplier-badge">@Model.SupplierName</span>
+                            }
+                            else
+                            {
+                                <span class="user-badge">User</span>
+                            }
+                        </dd>
                     </div>
+
                     <div class="info-item">
                         <dt>@Html.DisplayNameFor(model => model.Quantity)</dt>
                         <dd>@Html.DisplayFor(model => model.Quantity)</dd>
                     </div>
+
                     <div class="info-item">
                         <dt>@Html.DisplayNameFor(model => model.TransactionDate)</dt>
-                        <dd>@Html.DisplayFor(model => model.TransactionDate)</dd>
+                        <dd>@Model?.TransactionDate.ToString("dddd, MMMM dd, yyyy hh:mm tt")</dd>
                     </div>
+
                     <div class="info-item">
                         <dt>@Html.DisplayNameFor(model => model.TransactionType)</dt>
-                        <dd>@Html.DisplayFor(model => model.TransactionType)</dd>
+                        <dd>
+                            @{
+                                var typeClass = Model?.TransactionType.ToString().ToLower() == "inbound" ? "type-inbound" : "type-outbound";
+                                var typeText = Model?.TransactionType.ToString().ToLower() == "inbound" ? "INBOUND" : "OUTBOUND";
+                            }
+                            <span class="badge-transaction @typeClass">@typeText</span>
+                        </dd>
                     </div>
+                    @if (isAdmin)
+                    {
+                        <div class="info-item">
+                            <dt>Transaction ID</dt>
+                            <dd class="text-muted">@Model?.TransactionId</dd>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

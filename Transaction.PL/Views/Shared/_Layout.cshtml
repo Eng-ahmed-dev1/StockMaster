@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/profile-layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/_Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransactionsTask.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -54,7 +55,7 @@
                         }
                         else
                         {
-                           
+
                             <li class="nav-item">
                                 <a class="nav-link" asp-action="Login" asp-controller="Account">
                                     <i class="fas fa-sign-in-alt"></i>
@@ -69,6 +70,7 @@
                             </li>
                         }
 
+                        <!-- Theme Toggle will be inserted here by JavaScript -->
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item profile-dropdown" id="profileDropdown">
@@ -102,13 +104,9 @@
                                             {
                                                 <span class="user-role-badge role-admin">Admin</span>
                                             }
-                                            else if (User.IsInRole("Manager"))
-                                            {
-                                                <span class="user-role-badge role-manager">Manager</span>
-                                            }
                                             else
                                             {
-                                                <span class="user-role-badge role-user">User</span>
+                                                <span class="user-role-badge role-user">Supplier</span>
                                             }
                                         </div>
                                     </div>
@@ -136,10 +134,10 @@
                                                     My Transactions
                                                 </a>
                                             </li>
-                                            @if (User.IsInRole("Admin"))                                          
+                                            @if (User.IsInRole("Admin"))
                                             {
                                                 <li>
-                                                    <a asp-action="ShowSuppliers" asp-controller="Supplier">
+                                                    <a asp-action="ShowAllSuppliers" asp-controller="Suppliers">
                                                         <i class="fas fa-truck"></i>
                                                         Suppliers
                                                     </a>
@@ -201,6 +199,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/dark-mode.js" asp-append-version="true"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation active state

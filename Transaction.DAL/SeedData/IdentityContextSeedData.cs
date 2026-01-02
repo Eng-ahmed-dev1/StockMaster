@@ -45,51 +45,30 @@ namespace Transaction.DAL
                 }
             }
         }
-
         private static async Task SeedUsersAsync(UserManager<SystemUsers> userManager)
         {
-            // ========== Admin User ==========
             var adminEmail = "ahmed@gmail.com";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var admin = new SystemUsers
                 {
                     FullName = "Ahmed Alaa",
-                    UserName = "DevAhmed",
+                    UserName = "Own:Ahmed",
                     Email = adminEmail,
-                    PhoneNumber = "01030939232",
+                    PhoneNumber = "01226598971",
                     EmailConfirmed = true,
                     IsActive = true,
                     Gender = Gender.Male,
-
+                    City = "Alexandria",
+                    Country ="Egypt",
+                    CreatedAt = DateTime.Now,
+                    DateOfBirth = new DateTime(2000,11,30),
                 };
 
                 var adminResult = await userManager.CreateAsync(admin, "P@ssw0rd");
                 if (adminResult.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "Admin");
-                }
-            }
-
-            // ========== Normal User ==========
-            var userEmail = "mohamed@gmail.com"; 
-            if (await userManager.FindByEmailAsync(userEmail) == null)
-            {
-                var normalUser = new SystemUsers
-                {
-                    FullName = "Mohamed",
-                    UserName = "DevMohamed",
-                    Email = userEmail,
-                    PhoneNumber = "01282845813",
-                    EmailConfirmed = true,
-                    IsActive = true,
-                    Gender = Gender.Male,
-                };
-
-                var userResult = await userManager.CreateAsync(normalUser, "P@ssw0rd");
-                if (userResult.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(normalUser, "Supplier");
                 }
             }
         }

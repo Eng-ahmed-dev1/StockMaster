@@ -106,14 +106,14 @@ namespace TransactionsTask.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous] 
         public async Task<IActionResult> Details(int id)
         {
-            var product = await _db.GetProductDetailsById(id);
+            var product = await _db.GetProductDetailsById(id);  
+
             if (product == null)
                 return NotFound();
 
             return View(product);
-        }
+        }   
     }
 }

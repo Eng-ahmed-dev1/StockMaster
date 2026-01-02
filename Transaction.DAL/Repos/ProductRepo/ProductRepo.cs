@@ -7,11 +7,13 @@ namespace TransactionsTask.Repos.ProductRepo
     public class ProductRepo : IProductRepo
     {
         private readonly InventoryDB _inventoryDB;
+
         public ProductRepo(InventoryDB dB) => _inventoryDB = dB;
+
         public async Task AddProduct(Products product)
         {
             await _inventoryDB.AddAsync(product);
-           await _inventoryDB.SaveChangesAsync();
+            await _inventoryDB.SaveChangesAsync();
         }
 
         public async Task DeleteProduct(Products product)
@@ -19,6 +21,7 @@ namespace TransactionsTask.Repos.ProductRepo
             _inventoryDB.Products.Remove(product);
             await _inventoryDB.SaveChangesAsync();
         }
+
         public async Task<Products?> GetProductById(int id)
         {
             return await _inventoryDB.Products
@@ -27,9 +30,9 @@ namespace TransactionsTask.Repos.ProductRepo
 
         public async Task<Products?> GetProductDetailsById(int id)
         {
-            return await
-                _inventoryDB.Products
-                .Include(x => x.Transactions)
+            return await _inventoryDB.Products
+                .Include(x => x.Transactions)     
+                .ThenInclude(x=>x.Supplier)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ProductId == id);
         }

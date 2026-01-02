@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransactionsTask.Data;
 
@@ -11,9 +12,11 @@ using TransactionsTask.Data;
 namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    partial class InventoryDBModelSnapshot : ModelSnapshot
+    [Migration("20260102083542_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -401,7 +404,7 @@ namespace Transaction.DAL.Migrations
                     b.HasOne("TransactionsTask.Models.Products", "Product")
                         .WithMany("Transactions")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Transaction.DAL.SystemUsers", "Supplier")
                         .WithMany("SuppliedTransactions")

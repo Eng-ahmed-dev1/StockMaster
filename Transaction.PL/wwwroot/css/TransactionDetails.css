@@ -191,3 +191,44 @@ body {
         padding: 15px;
     }
 }
+.type-inbound {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.type-outbound {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.user-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.supplier-badge {
+    background-color: #cfe2ff;
+    color: #052c65;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.supplier-info {
+    display: flex;
+    align-items: center;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+    .supplier-info i {
+        color: #3498db;
+    }

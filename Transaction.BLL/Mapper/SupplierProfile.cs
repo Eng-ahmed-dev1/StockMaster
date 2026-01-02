@@ -20,7 +20,11 @@ namespace Transaction.BLL
                  .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.SuppliedTransactions));
 
             CreateMap<SystemUsers, EditUser>().ReverseMap();
-            CreateMap<UserViewModel, EditUser>();
+            CreateMap<UserViewModel, EditUser>()
+            .ForMember(dest=>dest.SupplierName , p=>p.MapFrom(src=>src.FullName))
+            .ForMember(dest=>dest.SupplierEmail , p=>p.MapFrom(src=>src.Email))
+            .ForMember(dest=>dest.SupplierId, p=>p.MapFrom(src=>src.Id));
+
         }
     }
 }

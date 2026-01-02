@@ -13,8 +13,8 @@ namespace Transaction.BLL
             CreateMap<ProductCreateViewModel, Products>();
             // Map ViewModel For Read 
             CreateMap<Products, ProductReadViewModel>()
-                .ForMember(x => x.TransactionId, x => x.Ignore())
                 .ForMember(dest => dest.Transactions, p => p.MapFrom(src => src.Transactions));
+
             // Map ViewModel For Edit 
             CreateMap<ProductEditViewModel, Products>()
                 .ForMember(dest => dest.ProductName, opt => opt.Ignore())

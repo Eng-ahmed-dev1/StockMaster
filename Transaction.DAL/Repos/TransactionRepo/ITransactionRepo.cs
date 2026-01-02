@@ -7,11 +7,14 @@ namespace TransactionsTask.Repos.TransactionRepo
         Task<Transactions?> GetTransactionById(int id);
         Task<IEnumerable<Transactions>> GetTransactions();
         Task<IEnumerable<Transactions>> GetTransactionWithDetails();
-        Task<IEnumerable<Transactions>> GetTransactionsByUserId(string userId); 
+        Task<IEnumerable<Transactions>> GetTransactionsBySupplierId(string userId); 
 
         Task DeleteTransaction(Transactions transaction);
         Task UpdateTransaction(Transactions transaction);
         Task AddTransaction(Transactions transaction);
+        //For Admin
+        Task<IEnumerable<Transactions>> GetAllTransactions();
+
 
     }
 }

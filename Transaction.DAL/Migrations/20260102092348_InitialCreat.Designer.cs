@@ -12,8 +12,8 @@ using TransactionsTask.Data;
 namespace Transaction.DAL.Migrations
 {
     [DbContext(typeof(InventoryDB))]
-    [Migration("20251231131633_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260102092348_InitialCreat")]
+    partial class InitialCreat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,9 +316,6 @@ namespace Transaction.DAL.Migrations
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductsProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -337,8 +334,6 @@ namespace Transaction.DAL.Migrations
                     b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductsProductId");
 
                     b.HasIndex("SupplierId");
 
@@ -407,13 +402,9 @@ namespace Transaction.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("TransactionsTask.Models.Products", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("TransactionsTask.Models.Products", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("ProductsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Transaction.DAL.SystemUsers", "Supplier")
                         .WithMany("SuppliedTransactions")

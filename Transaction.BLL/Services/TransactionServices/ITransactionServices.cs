@@ -13,6 +13,9 @@ namespace Transaction.BLL
         Task<bool> UpdateTransaction(TransactionEditViewModel transactionEdit);
         Task<int> AddTransaction(TransactionCreateViewModel transactionCreate);
         Task<IEnumerable<TransactionReadProSupViewModels>> GetTransactionsByUserId(string userId);
+        //For Admin
+        Task<IEnumerable<TransactionReadProSupViewModels>> GetAllTransactions();
+
 
     }
 }

@@ -32,7 +32,8 @@ namespace TransactionsTask.Repos.SupplierRepo
         public async Task<SystemUsers?> GetSupplierId(string id)
         {
             return await db.Users
-                .FirstOrDefaultAsync(sup => sup.Id == id);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(sup => sup.Id == id);
         }
 
         public async Task<SystemUsers?> GetSupplierIdWithDetails(string id)

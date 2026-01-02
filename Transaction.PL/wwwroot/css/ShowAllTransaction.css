@@ -411,3 +411,54 @@ media (max-width: 480px) {
         font-size: 1.4rem;
     }
 }
+.badge-inbound {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+.badge-outbound {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+.quantity-inbound {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.quantity-outbound {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.stat-icon.blue {
+    background-color: #cfe2ff;
+    color: #052c65;
+}
+
+.stat-icon.red {
+    background-color: #f8d7da;
+    color: #842029;
+}

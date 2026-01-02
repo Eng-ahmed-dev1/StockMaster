@@ -16,26 +16,23 @@ namespace TransactionsTask.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Transaction CreatedBy
             modelBuilder.Entity<Transactions>()
                 .HasOne(t => t.CreatedBy)
                 .WithMany(u => u.CreatedTransactions)
                 .HasForeignKey(t => t.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Transaction Supplier
             modelBuilder.Entity<Transactions>()
                 .HasOne(t => t.Supplier)
                 .WithMany(u => u.SuppliedTransactions)
                 .HasForeignKey(t => t.SupplierId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.SetNull); 
 
-            // Transaction Product
             modelBuilder.Entity<Transactions>()
                 .HasOne(t => t.Product)
-                .WithMany()
+                .WithMany(p => p.Transactions)
                 .HasForeignKey(t => t.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // TransactionType enum as string
             modelBuilder.Entity<Transactions>()
@@ -48,6 +45,9 @@ namespace TransactionsTask.Data
 
             modelBuilder.Entity<Transactions>()
                 .HasIndex(t => t.SupplierId);
+
+            modelBuilder.Entity<Transactions>()
+                .HasIndex(t => t.ProductId);
         }
     }
 }

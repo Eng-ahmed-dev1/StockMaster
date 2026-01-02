@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Transaction.BLL;
 using TransactionsTask.Models;
-using TransactionsTask.Repos.ProductRepo;
-using TransactionsTask.Repos.SupplierRepo;
 
 namespace TransactionsTask.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class TransactionController : Controller
     {
         private readonly ITransactionServices _db;
@@ -28,10 +25,23 @@ namespace TransactionsTask.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> ShowAllTransactions()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var transactions = await _db.GetTransactionsByUserId(userId!); 
+            var isAdmin = User.IsInRole("Admin");
+
+            IEnumerable<TransactionReadProSupViewModels> transactions;
+
+            if (isAdmin)
+            {
+                transactions = await _db.GetAllTransactions();
+            }
+            else
+            {
+                transactions = await _db.GetTransactionsByUserId(userId!);
+            }
+
             return View(transactions);
         }
 
@@ -46,14 +56,15 @@ namespace TransactionsTask.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TransactionCreateViewModel transactionCreate)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            transactionCreate.CreatedByUserId = userId!;
+            ModelState.Remove(nameof(transactionCreate.CreatedByUserId));
+
             if (!ModelState.IsValid)
             {
                 await PopulateDropdowns();
                 return View(transactionCreate);
             }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            transactionCreate.CreatedByUserId = userId!;
 
             if (transactionCreate.TransactionType is TransactionType.Inbound)
             {
@@ -77,13 +88,9 @@ namespace TransactionsTask.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var transaction = await _db.GetTransactionId(id);
+            var transaction = await GetAuthorizedTransaction(id);
             if (transaction == null)
                 return NotFound();
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (transaction.CreatedByUserId != userId)
-                return Forbid(); 
 
             await PopulateDropdowns();
             var newEdit = _mapper.Map<TransactionEditViewModel>(transaction);
@@ -94,13 +101,11 @@ namespace TransactionsTask.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TransactionEditViewModel transactionUpdate)
         {
-            var oldTransaction = await _db.GetTransactionId(id);
+            var oldTransaction = await GetAuthorizedTransaction(id);
             if (oldTransaction == null)
                 return NotFound();
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (oldTransaction.CreatedByUserId != userId)
-                return Forbid();
+            ModelState.Remove(nameof(transactionUpdate.CreatedByUserId));
 
             if (!ModelState.IsValid)
             {
@@ -108,10 +113,8 @@ namespace TransactionsTask.Controllers
                 return View(transactionUpdate);
             }
 
-            // 👇 حافظ على الـ CreatedByUserId الأصلي
             transactionUpdate.CreatedByUserId = oldTransaction.CreatedByUserId;
 
-            // عكس الـ transaction القديم
             if (oldTransaction.TransactionType == TransactionType.Inbound)
             {
                 await _proService.UpdateStockLevel(oldTransaction.ProductId, -oldTransaction.Quantity);
@@ -151,10 +154,7 @@ namespace TransactionsTask.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var transactions = await _db.GetTransactionsByUserId(userId!); 
-            var transaction = transactions.FirstOrDefault(x => x.TransactionId == id);
-
+            var transaction = await GetAuthorizedTransaction(id);
             if (transaction == null)
                 return NotFound();
 
@@ -165,10 +165,7 @@ namespace TransactionsTask.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var transactions = await _db.GetTransactionsByUserId(userId!); 
-            var transaction = transactions.FirstOrDefault(x => x.TransactionId == id);
-
+            var transaction = await GetAuthorizedTransaction(id);
             if (transaction == null)
                 return NotFound();
 
@@ -188,32 +185,37 @@ namespace TransactionsTask.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var transactions = await _db.GetTransactionsByUserId(userId!); 
-            var transaction = transactions.FirstOrDefault(x => x.TransactionId == id);
-
+            var transaction = await GetAuthorizedTransaction(id);
             if (transaction is null)
                 return NotFound();
 
             return View(transaction);
         }
 
-        #region HelperMethod
+        #region Helper Methods
         private async Task PopulateDropdowns()
         {
-            ViewBag.Suppliers = new SelectList((await _supServices.GetSuppliers())
-              .Select(sup => new
-              {
-                  Id = sup.Id,
-                  Text = sup.UserName
-              }), "Id", "Text");
+            var suppliers = await _supServices.GetSuppliers();
+            ViewBag.Suppliers = new SelectList(suppliers, "Id", "UserName");
 
-            ViewBag.Products = new SelectList((await _proService.GetAllProducts())
-            .Select(pro => new
+            var products = await _proService.GetAllProducts();
+            ViewBag.Products = new SelectList(products, "ProductId", "ProductName");
+        }
+
+        private async Task<TransactionReadProSupViewModels?> GetAuthorizedTransaction(int id)
+        {
+            var isAdmin = User.IsInRole("Admin");
+
+            if (isAdmin)
             {
-                Id = pro.ProductId,
-                Name = pro.ProductName,
-            }), "Id", "Name");
+                return await _db.GetTransactionId(id);
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userTransactions = await _db.GetTransactionsByUserId(userId!);
+                return userTransactions.FirstOrDefault(t => t.TransactionId == id);
+            }
         }
         #endregion
     }

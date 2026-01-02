@@ -70,15 +70,6 @@
                             </div>
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
-
-                        <!-- Remember Me -->
-                        <div class="mb-4 form-check">
-                            <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
-                            <label asp-for="RememberMe" class="form-check-label" for="rememberMe">
-                                Remember me
-                            </label>
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary">
@@ -88,10 +79,6 @@
 
                         <!-- Links -->
                         <div class="text-center">
-                            <a asp-action="ForgotPassword" asp-controller="Account"
-                               class="text-decoration-none small d-block mb-2">
-                                <i class="fas fa-key me-1"></i>Forgot password?
-                            </a>
                             <div class="border-top pt-3">
                                 <p class="text-muted small mb-2">Don't have an account?</p>
                                 <a asp-action="Register" asp-controller="Account"

@@ -197,8 +197,7 @@ namespace Transaction.DAL.Migrations
                     SupplierId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductsProductId = table.Column<int>(type: "int", nullable: true)
+                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,11 +220,6 @@ namespace Transaction.DAL.Migrations
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Products_ProductsProductId",
-                        column: x => x.ProductsProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -276,11 +270,6 @@ namespace Transaction.DAL.Migrations
                 name: "IX_Transactions_ProductId",
                 table: "Transactions",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_ProductsProductId",
-                table: "Transactions",
-                column: "ProductsProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_SupplierId",
