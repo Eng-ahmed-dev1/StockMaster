@@ -341,6 +341,18 @@ SystemUsers (1) ──→ (N) Transactions [SupplierId]
 ---
 
 ## 📸 Screenshots
+### Register
+<div align="center">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/Register.png" alt="Register">
+  
+### Responsive Register
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/responsiveRegister.png" alt="ResponsiveRegister">
+</div>
+
+### Login
+<div align="center">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/Login.png" alt="Login">
+</div>
 
 ### Dashboard
 <div align="center">
@@ -354,7 +366,7 @@ SystemUsers (1) ──→ (N) Transactions [SupplierId]
 
 ### Profile
 <div align="center">
-<img src="" alt="Transactions">
+<img src="https://github.com/Eng-ahmed-dev1/TransactionHandling_Project/blob/d5702a0e7576b09efb3e098c58980d0464dc602c/Images/Light-ModeProfile.png" alt="Profile">
 </div>
 
 ### PDF Export
